@@ -202,12 +202,18 @@ public class OptionsPopupView<T extends Context & ActivityContext> extends Arrow
      */
     public static ArrayList<OptionItem> getOptions(Launcher launcher) {
         ArrayList<OptionItem> options = new ArrayList<>();
+        boolean lockHomeScreen = Utilities.isWorkspaceEditAllowed(launcher);
+        options.add(new OptionItem(launcher,
+                lockHomeScreen ? R.string.home_screen_unlock : R.string.home_screen_lock,
+                lockHomeScreen ? R.drawable.ic_work_lock_open : R.drawable.ic_work_lock,
+                IGNORE,
+                OptionsPopupView::toggleHomeScreenLock));
         options.add(new OptionItem(launcher,
                 R.string.styles_wallpaper_button_text,
                 R.drawable.ic_palette,
                 IGNORE,
                 OptionsPopupView::startWallpaperPicker));
-        if (WIDGETS_ENABLED) {
+        if (WIDGETS_ENABLED && lockHomeScreen) {
             options.add(new OptionItem(launcher,
                     R.string.widget_button_text,
                     R.drawable.ic_widget,
@@ -288,6 +294,12 @@ public class OptionsPopupView<T extends Context & ActivityContext> extends Arrow
             intent.setPackage(pickerPackage);
         }
         return launcher.startActivitySafely(v, intent, placeholderInfo(intent)) != null;
+    }
+
+    private static boolean toggleHomeScreenLock(View v) {
+        Context context = v.getContext();
+        Utilities.setWorkspaceEdit(context);
+        return true;
     }
 
     static WorkspaceItemInfo placeholderInfo(Intent intent) {
