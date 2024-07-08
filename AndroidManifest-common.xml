@@ -76,6 +76,7 @@
         android:label="@string/derived_app_name"
         android:largeHeap="@bool/config_largeHeap"
         android:restoreAnyVersion="true"
+        tools:replace="android:icon,android:name"
         android:supportsRtl="true" >
 
         <!-- Intent received when a session is committed -->
@@ -148,7 +149,7 @@
         <activity
             android:name="com.android.launcher3.settings.SettingsActivity"
             android:label="@string/settings_button_text"
-            android:theme="@style/HomeSettings.Theme"
+            android:theme="@style/jOS.Theme"
             android:exported="true"
             android:autoRemoveFromRecents="true">
             <intent-filter>
