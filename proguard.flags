@@ -61,3 +61,6 @@
 -keep class com.android.launcher3.lineage.trust.** {
   *;
 }
+
+# Keep Smartspacer's client SDK
+-keep class com.kieronquinn.app.smartspacer.sdk.**  { *; }

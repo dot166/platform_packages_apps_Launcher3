@@ -549,4 +549,7 @@
 
     <!-- WindowManagerProxy -->
     <dimen name="max_width_and_height_of_small_display_cutout">136px</dimen>
+
+    <!-- Smartspace -->
+    <dimen name="enhanced_smartspace_height">104dp</dimen>
 </resources>

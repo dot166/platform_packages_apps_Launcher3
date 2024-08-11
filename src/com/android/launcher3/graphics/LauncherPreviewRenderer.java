@@ -507,7 +507,7 @@ public class LauncherPreviewRenderer extends ContextWrapper
         if (FeatureFlags.QSB_ON_FIRST_SCREEN && dataModel.isFirstPagePinnedItemEnabled
                 && !SHOULD_SHOW_FIRST_PAGE_WIDGET) {
             CellLayout firstScreen = mWorkspaceScreens.get(FIRST_SCREEN_ID);
-            View qsb = mHomeElementInflater.inflate(R.layout.qsb_preview, firstScreen, false);
+            View qsb = mHomeElementInflater.inflate(R.layout.search_container_workspace, firstScreen, false);
             CellLayoutLayoutParams lp = new CellLayoutLayoutParams(
                     0, 0, firstScreen.getCountX(), 1);
             lp.canReorder = false;
