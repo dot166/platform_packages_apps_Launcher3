@@ -65,6 +65,11 @@ public class MainThreadInitializedObject<T extends SafeCloseable> {
         return mValue;
     }
 
+    // fixes a bug
+    public T getNoCreate() {
+        return mValue;
+    }
+
     /**
      * Executes the callback is the value is already created
      * @return true if the callback was executed, false otherwise

@@ -86,6 +86,10 @@ public class LauncherAppState implements SafeCloseable {
         return INSTANCE.get(context);
     }
 
+    public static LauncherAppState getInstanceNoCreate() {
+        return INSTANCE.getNoCreate();
+    }
+
     public Context getContext() {
         return mContext;
     }
