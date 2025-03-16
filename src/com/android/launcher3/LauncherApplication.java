@@ -16,7 +16,7 @@
  */
 package com.android.launcher3;
 
-import io.github.dot166.jLib.app.jLIBCoreApp;
+import io.github.dot166.jlib.app.jLIBCoreApp;
 
 import com.android.launcher3.dagger.DaggerLauncherAppComponent;
 import com.android.launcher3.dagger.LauncherAppComponent;
