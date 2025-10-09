@@ -26,6 +26,7 @@ import static com.android.launcher3.InvariantDeviceProfile.INDEX_TWO_PANEL_PORTR
 import static com.android.launcher3.Utilities.dpiFromPx;
 import static com.android.launcher3.Utilities.pxFromSp;
 import static com.android.launcher3.icons.IconNormalizer.ICON_VISIBLE_AREA_FACTOR;
+import static com.android.launcher3.LauncherPrefs.DOT_COUNT;
 import static com.android.launcher3.testing.shared.ResourceUtils.INVALID_RESOURCE_HANDLE;
 import static com.android.launcher3.testing.shared.ResourceUtils.pxFromDp;
 import static com.android.launcher3.testing.shared.ResourceUtils.roundPxValueFromFloat;
@@ -41,6 +42,7 @@ import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.view.Surface;
@@ -849,9 +851,11 @@ public class DeviceProfile {
 
         dimensionOverrideProvider.accept(this);
 
+        boolean showNotificationCount = DOT_COUNT.get(context);
+
         // This is done last, after iconSizePx is calculated above.
-        mDotRendererWorkSpace = createDotRenderer(themeManager, iconSizePx, dotRendererCache);
-        mDotRendererAllApps = createDotRenderer(themeManager, allAppsIconSizePx, dotRendererCache);
+        mDotRendererWorkSpace = createDotRenderer(themeManager, iconSizePx, showNotificationCount, dotRendererCache);
+        mDotRendererAllApps = createDotRenderer(themeManager, allAppsIconSizePx, showNotificationCount, dotRendererCache);
     }
 
     /**
@@ -873,13 +877,13 @@ public class DeviceProfile {
     }
 
     private static DotRenderer createDotRenderer(
-            @NonNull ThemeManager themeManager, int size, @NonNull SparseArray<DotRenderer> cache) {
+            @NonNull ThemeManager themeManager, int size, boolean showNotificationCount, @NonNull SparseArray<DotRenderer> cache) {
         DotRenderer renderer = cache.get(size);
         if (renderer == null) {
             renderer = new DotRenderer(
                     size,
                     themeManager.getIconShape().getPath(DEFAULT_DOT_SIZE),
-                    DEFAULT_DOT_SIZE);
+                    DEFAULT_DOT_SIZE, showNotificationCount);
             cache.put(size, renderer);
         }
         return renderer;

@@ -28,6 +28,7 @@ import static com.android.launcher3.LauncherPrefs.SHOW_DESKTOP_LABELS;
 import static com.android.launcher3.LauncherPrefs.SHOW_DRAWER_LABELS;
 import static com.android.launcher3.LauncherPrefs.ICON_SIZE;
 import static com.android.launcher3.LauncherPrefs.FONT_SIZE;
+import static com.android.launcher3.LauncherPrefs.DOT_COUNT;
 import static com.android.launcher3.LauncherPrefs.ALLAPPS_THEMED_ICONS;
 import static com.android.launcher3.Utilities.dpiFromPx;
 import static com.android.launcher3.testing.shared.ResourceUtils.INVALID_RESOURCE_HANDLE;
@@ -309,7 +310,8 @@ public class InvariantDeviceProfile {
                     ICON_SIZE.getSharedPrefKey().equals(key) ||
                     FONT_SIZE.getSharedPrefKey().equals(key) ||
                     SHOW_DESKTOP_LABELS.getSharedPrefKey().equals(key) ||
-                    SHOW_DRAWER_LABELS.getSharedPrefKey().equals(key)) {
+                    SHOW_DRAWER_LABELS.getSharedPrefKey().equals(key) ||
+                    DOT_COUNT.getSharedPrefKey().equals(key)) {
                 onConfigChanged(context);
             }
         };
