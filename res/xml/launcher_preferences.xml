@@ -16,8 +16,7 @@
 
 <androidx.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:launcher="http://schemas.android.com/apk/res-auto"
-    xmlns:settings="http://schemas.android.com/apk/res/com.android.launcher3">
+    xmlns:launcher="http://schemas.android.com/apk/res-auto">
 
     <com.android.launcher3.settings.NotificationDotsPreference
         android:key="pref_icon_badging"
@@ -25,7 +24,7 @@
         android:persistent="false"
         android:widgetLayout="@layout/notification_pref_warning" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:key="show_notification_count"
         android:title="@string/show_notification_count"
         android:persistent="true" />
@@ -34,7 +33,7 @@
       LAUNCHER_ADD_NEW_APPS_TO_HOME_SCREEN_ENABLED(613)
       LAUNCHER_ADD_NEW_APPS_TO_HOME_SCREEN_DISABLED(614)
     -->
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:key="pref_add_icon_to_home"
         android:title="@string/auto_add_shortcuts_label"
         android:summary="@string/auto_add_shortcuts_description"
@@ -47,7 +46,7 @@
       LAUNCHER_HOME_SCREEN_ROTATION_ENABLED(615)
       LAUNCHER_HOME_SCREEN_ROTATION_DISABLED(616)
     -->
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:key="pref_allowRotation"
         android:title="@string/allow_rotation_title"
         android:summary="@string/allow_rotation_desc"
@@ -56,39 +55,39 @@
         launcher:logIdOn="615"
         launcher:logIdOff="616" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
       android:key="pref_drawer_show_labels"
       android:title="@string/drawer_show_labels"
       android:defaultValue="true"
       android:persistent="true" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
       android:key="pref_desktop_show_labels"
       android:title="@string/desktop_show_labels"
       android:defaultValue="true"
       android:persistent="true" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
       android:key="pref_allapps_themed_icons"
       android:title="@string/pref_themed_icons_title"
       android:summary="@string/pref_themed_icons_summary"
       android:persistent="true" />
 
-    <com.android.launcher3.settings.preferences.CustomSeekBarPreference
+    <io.github.dot166.jlib.preference.SliderPreference
       android:key="pref_custom_icon_size"
       android:title="@string/icon_size_title"
       android:persistent="true"
       android:max="150"
       android:min="50"
-      settings:units="%"
+      launcher:units="%"
       android:defaultValue="100" />
 
-    <com.android.launcher3.settings.preferences.CustomSeekBarPreference
+    <io.github.dot166.jlib.preference.SliderPreference
       android:key="pref_custom_font_size"
       android:title="@string/font_size_title"
       android:persistent="true"
       android:max="150"
       android:min="50"
-      settings:units="%"
+      launcher:units="%"
       android:defaultValue="100" />
 </androidx.preference.PreferenceScreen>

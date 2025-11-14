@@ -15,7 +15,7 @@
  */
 package com.android.launcher3;
 
-import android.app.Application;
+import io.github.dot166.jlib.app.jLIBCoreApp;
 
 import com.android.launcher3.dagger.DaggerLauncherAppComponent;
 import com.android.launcher3.dagger.LauncherAppComponent;
@@ -25,7 +25,7 @@ import com.android.launcher3.util.TraceHelper;
 /**
  * Main application class for Launcher
  */
-public class LauncherApplication extends Application {
+public class LauncherApplication extends jLIBCoreApp {
 
     private volatile LauncherBaseAppComponent mAppComponent;
     @Override
