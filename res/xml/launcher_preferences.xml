@@ -28,7 +28,7 @@
       LAUNCHER_ADD_NEW_APPS_TO_HOME_SCREEN_ENABLED(613)
       LAUNCHER_ADD_NEW_APPS_TO_HOME_SCREEN_DISABLED(614)
     -->
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:key="pref_add_icon_to_home"
         android:title="@string/auto_add_shortcuts_label"
         android:summary="@string/auto_add_shortcuts_description"
@@ -37,7 +37,7 @@
         launcher:logIdOn="613"
         launcher:logIdOff="614" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
       android:key="pref_allapps_themed_icons"
       android:title="@string/pref_themed_icons_title"
       android:summary="@string/pref_themed_icons_summary"
