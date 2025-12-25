@@ -287,28 +287,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             numRows: Int,
             numColumns: Int,
         ) {
-            val isWidgetVSpanInvalid = currentSpanY < minVSpan
-            val isWidgetHSpanInvalid = currentSpanX < minHSpan
-
-            // On font / display change, the dp/px size of a cell changes, which means, existing
-            // spans may be invalid. User should be able to resize to the correct widget size.
-            verticalResizeActive =
-                info.hasVerticalResizeModeEnabled() &&
-                    ((minVSpan < numRows && maxVSpan > 1 && minVSpan < maxVSpan) ||
-                        isWidgetVSpanInvalid)
-            if (!verticalResizeActive) {
-                dragHandles.top.visibility = GONE
-                dragHandles.bottom.visibility = GONE
-            }
-
-            horizontalResizeActive =
-                info.hasHorizontalResizeModeEnabled() &&
-                    ((minHSpan < numColumns && maxHSpan > 1 && minHSpan < maxHSpan) ||
-                        isWidgetHSpanInvalid)
-            if (!horizontalResizeActive) {
-                dragHandles.left.visibility = GONE
-                dragHandles.right.visibility = GONE
-            }
         }
 
         this.cellLayout = cellLayout
@@ -360,12 +338,10 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
      * Additionally, evaluates & saves the resize bounds / ranges necessary for the active resize.
      */
     private fun beginResizeIfPointInRegion(x: Int, y: Int): Boolean {
-        isLeftBorderActive = (x < touchTargetWidth) && horizontalResizeActive
-        isRightBorderActive = (x > width - touchTargetWidth) && horizontalResizeActive
-        isTopBorderActive =
-            (y < touchTargetWidth + topTouchRegionAdjustment) && verticalResizeActive
-        isBottomBorderActive =
-            (y > height - touchTargetWidth + bottomTouchRegionAdjustment) && verticalResizeActive
+        isLeftBorderActive = x < touchTargetWidth
+        isRightBorderActive = x > width - touchTargetWidth
+        isTopBorderActive = y < touchTargetWidth + topTouchRegionAdjustment
+        isBottomBorderActive = y > height - touchTargetWidth + bottomTouchRegionAdjustment
 
         val anyBordersActive =
             isLeftBorderActive || isRightBorderActive || isTopBorderActive || isBottomBorderActive
