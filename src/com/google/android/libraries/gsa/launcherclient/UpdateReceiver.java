@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 
+import com.android.launcher3.LauncherPrefs;
+
 import com.google.android.launcherclient.Constant;
 
 final class UpdateReceiver extends BroadcastReceiver {
@@ -18,7 +20,7 @@ final class UpdateReceiver extends BroadcastReceiver {
 
     public final void onReceive(Context context, Intent intent) {
         Uri data = intent.getData();
-        if (Build.VERSION.SDK_INT >= 19 || (data != null && Constant.GSA_PACKAGE.equals(data.getSchemeSpecificPart()))) {
+        if (Build.VERSION.SDK_INT >= 19 || (data != null && LauncherPrefs.NEXUS_FEED_PROVIDER.get(context).equals(data.getSchemeSpecificPart()))) {
             this.mClient.mSimpleServiceConnection.unbindService();
             this.mClient.sApplicationConnection.unbindService();
             LauncherClient.loadApiVersion(context);

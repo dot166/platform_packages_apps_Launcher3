@@ -27,6 +27,7 @@ import static com.android.launcher3.Flags.blurOnMoreSurfaces;
 import static com.android.launcher3.Flags.enableUnfoldStateAnimation;
 import static com.android.launcher3.LauncherConstants.SavedInstanceKeys.PENDING_SPLIT_SELECT_INFO;
 import static com.android.launcher3.LauncherConstants.SavedInstanceKeys.RUNTIME_STATE;
+import static com.android.launcher3.LauncherPrefs.NEXUS_FEED_PROVIDER;
 import static com.android.launcher3.LauncherSettings.Animation.DEFAULT_NO_ICON;
 import static com.android.launcher3.LauncherSettings.Animation.VIEW_BACKGROUND;
 import static com.android.launcher3.LauncherSettings.Favorites.CONTAINER_ALL_APPS;
@@ -86,6 +87,7 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.ShortcutInfo;
 import android.content.res.Configuration;
 import android.graphics.Rect;
@@ -259,7 +261,7 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 public class QuickstepLauncher extends Launcher implements RecentsViewContainer,
-        SystemShortcut.BubbleActivityStarter {
+        SystemShortcut.BubbleActivityStarter, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final boolean TRACE_LAYOUTS =
             SystemProperties.getBoolean("persist.debug.trace_layouts", false);
     private static final String TRACE_RELAYOUT_CLASS =
@@ -807,6 +809,7 @@ public class QuickstepLauncher extends Launcher implements RecentsViewContainer,
         OverviewComponentObserver.INSTANCE.get(this)
                 .addOverviewChangeListener(mOverviewChangeListener);
         new TraceStateLoggerHelper(this).startTraceStateLogger();
+        getSharedPrefs().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -1727,5 +1730,12 @@ public class QuickstepLauncher extends Launcher implements RecentsViewContainer,
     @Override
     public boolean isOnBackInvokedCallbackEnabled() {
         return getApplicationInfo().isOnBackInvokedCallbackEnabled();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String s) {
+        if (NEXUS_FEED_PROVIDER.getSharedPrefKey().equals(s)) {
+            resetOverlay();
+        }
     }
 }
