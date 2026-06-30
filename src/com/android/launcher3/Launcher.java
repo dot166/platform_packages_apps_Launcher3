@@ -611,6 +611,10 @@ public class Launcher extends StatefulActivity<LauncherState>
         switchOverlay(this::getDefaultOverlay);
     }
 
+    protected void resetOverlay() {
+        switchOverlay(this::getDefaultOverlay);
+    }
+
     private void switchOverlay(Supplier<LauncherOverlayManager> overlaySupplier) {
         if (mOverlayManager != null) {
             mOverlayManager.onActivityDestroyed();

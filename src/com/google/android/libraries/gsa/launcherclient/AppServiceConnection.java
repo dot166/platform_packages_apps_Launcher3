@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.os.IBinder;
 
-import com.google.android.libraries.launcherclient.ILauncherOverlayStub;
 import com.google.android.libraries.launcherclient.ILauncherOverlay;
 
 import java.lang.ref.WeakReference;
@@ -54,7 +53,7 @@ final class AppServiceConnection extends SimpleServiceConnection {
     }
 
     public final void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-        m70a(ILauncherOverlayStub.asInterface(iBinder));
+        m70a(ILauncherOverlay.Stub.asInterface(iBinder));
     }
 
     public final void onServiceDisconnected(ComponentName componentName) {
