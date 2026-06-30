@@ -338,10 +338,14 @@ public class Hotseat extends CellLayout implements Insettable {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         DeviceProfile dp = mActivity.getDeviceProfile();
-        mQsb.measure(
-                makeMeasureSpec(dp.getHotseatProfile().getQsbWidth(), MeasureSpec.EXACTLY),
-                makeMeasureSpec(dp.getHotseatProfile().getQsbHeight(), MeasureSpec.EXACTLY)
-        );
+        int width;
+        if (dp.getHotseatProfile().isQsbInline()) {
+            width = dp.getHotseatProfile().getQsbWidth();
+        } else {
+            width = getShortcutsAndWidgets().getMeasuredWidth();
+        }
+        mQsb.measure(makeMeasureSpec(width, MeasureSpec.EXACTLY),
+                makeMeasureSpec(dp.getHotseatProfile().getQsbHeight(), MeasureSpec.EXACTLY));
     }
 
     @Override
