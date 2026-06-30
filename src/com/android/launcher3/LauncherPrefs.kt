@@ -264,6 +264,7 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
         @JvmField
         val PROMISE_ICON_IDS = nonRestorableItem(InstallSessionHelper.PROMISE_ICON_IDS, "")
         @JvmField val ALLAPPS_THEMED_ICONS = backedUpItem("pref_allapps_themed_icons", true)
+        @JvmField val NEXUS_FEED_PROVIDER = backedUpItem("feed_provider", "com.android.launcher3")
         @JvmField val WORK_EDU_STEP = backedUpItem("showed_work_profile_edu", 0)
         @JvmField
         val WORKSPACE_SIZE =

@@ -7,6 +7,8 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
 
+import com.android.launcher3.LauncherPrefs;
+
 import com.google.android.launcherclient.Constant;
 
 public abstract class AbsServiceStatusChecker {
@@ -24,7 +26,7 @@ public abstract class AbsServiceStatusChecker {
     public abstract boolean getStatus(IBinder iBinder) throws RemoteException;
 
     public final void checkStatusService(StatusCallback statusCallback, Intent intent) {
-        intent.setPackage(Constant.GSA_PACKAGE);
+        intent.setPackage(LauncherPrefs.NEXUS_FEED_PROVIDER.get(mContext));
         if (!this.mContext.bindService(intent, new HotwordServiceConnection(this, statusCallback), Context.BIND_AUTO_CREATE)) {
             new Handler(Looper.getMainLooper()).post(new ServiceStatusRunnable(this, statusCallback));
         }

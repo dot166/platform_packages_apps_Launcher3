@@ -7,7 +7,6 @@ package com.google.android.launcherclient;
  */
 public final class Constant {
 
-    public static final String GSA_PACKAGE = "io.github.dot166.nexus";
     public static final String ACTION = "com.android.launcher3.WINDOW_OVERLAY";
 
 
