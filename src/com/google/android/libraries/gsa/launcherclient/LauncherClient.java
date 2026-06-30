@@ -16,11 +16,14 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.android.launcher3.LauncherPrefs;
+
 import com.google.android.launcherclient.Constant;
-import com.google.android.libraries.launcherclient.ILauncherOverlayCallbackSub;
+import com.google.android.libraries.launcherclient.ILauncherOverlayCallback;
 import com.google.android.libraries.launcherclient.ILauncherOverlay;
 
 import java.io.PrintWriter;
@@ -73,7 +76,7 @@ public class LauncherClient {
         this(activity, launcherClientCallbacks, new ClientOptions(true, true, true));
     }
 
-    private static class OverlayCallbacks extends ILauncherOverlayCallbackSub implements Handler.Callback {
+    private static class OverlayCallbacks extends ILauncherOverlayCallback.Stub implements Handler.Callback {
 
         private final Handler mUIHandler = new Handler(Looper.getMainLooper(), this);
 
@@ -176,7 +179,7 @@ public class LauncherClient {
         IntentFilter intentFilter = new IntentFilter("android.intent.action.PACKAGE_ADDED");
         intentFilter.addDataScheme("package");
         if (Build.VERSION.SDK_INT >= 19) {
-            intentFilter.addDataSchemeSpecificPart(Constant.GSA_PACKAGE, 0);
+            intentFilter.addDataSchemeSpecificPart(LauncherPrefs.NEXUS_FEED_PROVIDER.get((Context) activity), 0);
         }
         this.mActivity.registerReceiver(this.mUpdateReceiver, intentFilter);
         if (sServiceVersion <= 0) {
@@ -210,9 +213,9 @@ public class LauncherClient {
             if (!(this.mOverlay == null || this.mWindowAttrs == null)) {
                 try {
                     if (sServiceVersion < 4) {
-                        this.mOverlay.mo19d();
+                        this.mOverlay.onResume();
                     } else {
-                        this.mOverlay.mo15b(this.mState);
+                        this.mOverlay.setActivityState(this.mState);
                     }
                 } catch (RemoteException e) {
                 }
@@ -227,9 +230,9 @@ public class LauncherClient {
             if (!(this.mOverlay == null || this.mWindowAttrs == null)) {
                 try {
                     if (sServiceVersion < 4) {
-                        this.mOverlay.mo17c();
+                        this.mOverlay.onPause();
                     } else {
-                        this.mOverlay.mo15b(this.mState);
+                        this.mOverlay.setActivityState(this.mState);
                     }
                 } catch (RemoteException e) {
                 }
@@ -245,7 +248,7 @@ public class LauncherClient {
             this.mState |= 1;
             if (!(this.mOverlay == null || this.mWindowAttrs == null)) {
                 try {
-                    this.mOverlay.mo15b(this.mState);
+                    this.mOverlay.setActivityState(this.mState);
                 } catch (RemoteException e) {
                 }
             }
@@ -260,7 +263,7 @@ public class LauncherClient {
             this.mState &= -2;
             if (!(this.mOverlay == null || this.mWindowAttrs == null)) {
                 try {
-                    this.mOverlay.mo15b(this.mState);
+                    this.mOverlay.setActivityState(this.mState);
                 } catch (RemoteException e) {
                 }
             }
@@ -340,11 +343,11 @@ public class LauncherClient {
                     this.mOverlay.windowAttached2(bundle, this.mCurrentCallbacks);
                 }
                 if (sServiceVersion >= 4) {
-                    this.mOverlay.mo15b(this.mState);
+                    this.mOverlay.setActivityState(this.mState);
                 } else if ((this.mState & 2) != 0) {
-                    this.mOverlay.mo19d();
+                    this.mOverlay.onResume();
                 } else {
-                    this.mOverlay.mo17c();
+                    this.mOverlay.onPause();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -498,8 +501,9 @@ public class LauncherClient {
 
     static Intent getIntent(Context context) {
         String packageName = context.getPackageName();
+        Log.i("-1", LauncherPrefs.NEXUS_FEED_PROVIDER.get(context));
         return new Intent(Constant.ACTION)
-                .setPackage(Constant.GSA_PACKAGE)
+                .setPackage(LauncherPrefs.NEXUS_FEED_PROVIDER.get(context))
                 .setData(Uri.parse(new StringBuilder(String.valueOf(packageName).length() + 18)
                         .append("app://")
                         .append(packageName)
