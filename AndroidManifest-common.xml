@@ -224,5 +224,8 @@
                 android:value="7" />
         </service>
 
+        <activity android:name="com.android.launcher3.nexus.bottombar.lawnchair.BlankActivity" />
+        <activity android:name="com.android.launcher3.nexus.bottombar.preference.BottomBarPreferenceActivity" />
+
     </application>
 </manifest>

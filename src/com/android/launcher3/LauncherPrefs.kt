@@ -265,6 +265,17 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
         val PROMISE_ICON_IDS = nonRestorableItem(InstallSessionHelper.PROMISE_ICON_IDS, "")
         @JvmField val ALLAPPS_THEMED_ICONS = backedUpItem("pref_allapps_themed_icons", true)
         @JvmField val NEXUS_FEED_PROVIDER = backedUpItem("feed_provider", "com.android.launcher3")
+        @JvmField val smartspaceAagWidget = backedUpItem("enable_smartspace_aag_widget", true)
+        @JvmField val smartspaceBatteryStatus = backedUpItem("enable_smartspace_battery_status", true)
+        @JvmField val smartspaceTorch = backedUpItem("enable_smartspace_torch", true)
+        @JvmField val smartspaceNowPlaying = backedUpItem("enable_smartspace_now_playing", true)
+        @JvmField val smartspaceOnboarding = backedUpItem("enable_smartspace_onboarding", true)
+        @JvmField val smartspaceShowDate = backedUpItem("smartspace_show_date", true)
+        @JvmField val smartspaceShowTime = backedUpItem("smartspace_show_time", false)
+        @JvmField val smartspaceTimeFormat = backedUpItem("smartspace_time_format", "system")
+        @JvmField val smartspaceCalendar = backedUpItem("smartspace_calendar", "gregorian")
+        // hidden always true pref to force the config button to be there
+        @JvmField val bottomBarHiddenAlwaysTrue = backedUpItem("bottomBarHiddenAlwaysTrue", true)
         @JvmField val WORK_EDU_STEP = backedUpItem("showed_work_profile_edu", 0)
         @JvmField
         val WORKSPACE_SIZE =

@@ -21,4 +21,5 @@
     <string name="default_stub">Default Stub</string>
     <string name="no_activity_has_been_set_n_please_set_one_in_settings">No activity has been set,\n please set one in settings</string>
     <string name="feed_provider">Feed Provider</string>
+    <string name="bottom_bar_title">Bottom information bar</string>
 </resources>
