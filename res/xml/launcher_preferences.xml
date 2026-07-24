@@ -45,4 +45,6 @@
       android:persistent="true" />
 
     <com.android.launcher3.nexus.FeedProviderPreference android:key="feed_provider" android:title="@string/feed_provider"/>
+
+    <com.android.launcher3.nexus.bottombar.preference.BottomBarPreference android:key="enabled_bottom_bar_components" android:title="@string/bottom_bar_title" android:persistent="false"/>
 </androidx.preference.PreferenceScreen>
