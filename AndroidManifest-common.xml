@@ -66,6 +66,7 @@
         android:icon="@drawable/ic_launcher_home"
         android:label="@string/derived_app_name"
         android:largeHeap="@bool/config_largeHeap"
+        android:localeConfig="@xml/locale_config"
         android:restoreAnyVersion="true"
         tools:replace="android:name,android:backupAgent"
         android:supportsRtl="true" >
@@ -223,6 +224,9 @@
                 android:name="service.api.version"
                 android:value="7" />
         </service>
+
+        <activity android:name="com.android.launcher3.nexus.bottombar.lawnchair.BlankActivity" />
+        <activity android:name="com.android.launcher3.nexus.bottombar.preference.BottomBarPreferenceActivity" />
 
     </application>
 </manifest>

@@ -51,6 +51,10 @@ import com.android.launcher3.model.ModelWriterFactory;
 import com.android.launcher3.model.TestableModelState;
 import com.android.launcher3.model.repository.HomeScreenRepository;
 import com.android.launcher3.model.repository.StringCacheRepository;
+import com.android.launcher3.nexus.bottombar.lawnchair.HeadlessWidgetsManager;
+import com.android.launcher3.nexus.bottombar.lawnchair.NotificationManager;
+import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferences;
+import com.android.launcher3.nexus.bottombar.provider.SmartspaceProvider;
 import com.android.launcher3.notification.NotificationRepository;
 import com.android.launcher3.organizer.dagger.OrganizerComponent;
 import com.android.launcher3.pm.InstallSessionHelper;
@@ -192,6 +196,12 @@ public interface LauncherBaseAppComponent {
 
     /** Caches BitmapShaders for glow effects */
     GlowMaskCache getGlowMaskCache();
+
+    // BottomBar
+    SmartspaceProvider getSmartspaceProvider();
+    HeadlessWidgetsManager getHeadlessWidgetsManager();
+    NotificationManager getNotificationManager();
+    BottomBarPreferences getBottomBarPreferences();
 
     /** Builder for LauncherBaseAppComponent. */
     interface Builder {

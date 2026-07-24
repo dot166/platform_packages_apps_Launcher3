@@ -4,15 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
-import android.net.Uri
 import android.os.Process
 import android.util.AttributeSet
 import android.util.Log
+import android.view.View
+import androidx.core.net.toUri
 import androidx.preference.ListPreference
-import com.android.launcher3.LauncherPrefs
+import androidx.preference.PreferenceViewHolder
 import com.android.launcher3.R
 import com.google.android.launcherclient.Constant
-import androidx.core.net.toUri
 
 
 class FeedProviderPreference @JvmOverloads constructor(ctx: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0): ListPreference(ctx, attrs, defStyleAttr, defStyleRes) {
@@ -55,5 +55,14 @@ class FeedProviderPreference @JvmOverloads constructor(ctx: Context, attrs: Attr
     override fun setValue(value: String?) {
         super.setValue(value)
         summary = "$entry - $value"
+    }
+
+    override fun onBindViewHolder(holder: PreferenceViewHolder) {
+        super.onBindViewHolder(holder)
+
+        val widgetFrame = holder.findViewById(android.R.id.widget_frame)
+        if (widgetFrame != null) {
+            widgetFrame.visibility = View.GONE
+        }
     }
 }

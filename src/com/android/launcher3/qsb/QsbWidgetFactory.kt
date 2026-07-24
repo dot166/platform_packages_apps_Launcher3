@@ -26,6 +26,7 @@ import javax.inject.Inject
 open class QsbWidgetFactory @Inject constructor() {
 
     open fun createView(container: ViewGroup): View {
-        return View(container.context).apply { layoutParams = ViewGroup.LayoutParams(0, 0) }
+        return LayoutInflater.from(container.context)
+            .inflate(R.layout.qsb_container_hotseat, container, false)
     }
 }

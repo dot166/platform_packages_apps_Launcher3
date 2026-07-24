@@ -404,6 +404,7 @@ android_app {
     },
     kotlincflags: [
         "-Xjvm-default=all",
+        "-XXLanguage:+ExplicitBackingFields",
     ],
 }
 
@@ -498,6 +499,7 @@ android_library {
     use_resource_processor: false,
     kotlincflags: [
         "-Xjvm-default=all",
+        "-XXLanguage:+ExplicitBackingFields",
     ],
     lint: {
         baseline_filename: "lint-baseline.xml",
@@ -534,6 +536,7 @@ java_defaults {
     use_resource_processor: false,
     kotlincflags: [
         "-Xjvm-default=all",
+        "-XXLanguage:+ExplicitBackingFields",
     ],
     lint: {
         baseline_filename: "lint-baseline.xml",
