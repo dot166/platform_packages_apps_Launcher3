@@ -37,6 +37,7 @@ import androidx.annotation.WorkerThread;
 
 import com.android.launcher3.dagger.LauncherComponentProvider;
 import com.android.launcher3.dot.DotInfo;
+import com.android.launcher3.nexus.bottombar.lawnchair.NotificationManager;
 import com.android.launcher3.util.PackageUserKey;
 import com.android.launcher3.util.SafeCloseable;
 import com.android.launcher3.util.SettingsCache;
@@ -63,11 +64,12 @@ public class NotificationListener extends NotificationListenerService {
     private static final int MSG_RANKING_UPDATE = 4;
 
     private static final Function<PackageUserKey, DotInfo> DOT_FACTOR = key -> new DotInfo();
+    private static NotificationListener sNotificationListenerInstance = null;
 
     private final Handler mWorkerHandler;
     private final Ranking mTempRanking = new Ranking();
 
-    private boolean mIsConnected = false;
+    private static boolean mIsConnected = false;
 
     /** Maps packages to their DotInfo's . */
     private final Map<PackageUserKey, DotInfo> mPackageUserToDotInfos = new HashMap<>();
@@ -79,9 +81,21 @@ public class NotificationListener extends NotificationListenerService {
 
     private SettingsCache mSettingsCache;
     private @Nullable SafeCloseable mSettingCacheSafeCloseable;
+    private NotificationManager mNotificationManager;
 
     public NotificationListener() {
         mWorkerHandler = new Handler(UI_HELPER_EXECUTOR.getLooper(), this::handleWorkerMessage);
+        sNotificationListenerInstance = this;
+    }
+
+    public static @Nullable NotificationListener getInstanceIfConnected() {
+        return mIsConnected ? sNotificationListenerInstance : null;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mNotificationManager = NotificationManager.INSTANCE.get(this);
     }
 
     private boolean handleWorkerMessage(Message message) {
@@ -216,6 +230,7 @@ public class NotificationListener extends NotificationListenerService {
 
     private void onNotificationFullRefresh() {
         mWorkerHandler.obtainMessage(MSG_NOTIFICATION_FULL_REFRESH).sendToTarget();
+        mNotificationManager.onNotificationFullRefresh();
     }
 
     @Override
@@ -234,6 +249,7 @@ public class NotificationListener extends NotificationListenerService {
     public void onNotificationPosted(final StatusBarNotification sbn) {
         if (sbn != null) {
             mWorkerHandler.obtainMessage(MSG_NOTIFICATION_POSTED, sbn).sendToTarget();
+            mNotificationManager.onNotificationPosted(sbn);
         }
     }
 
@@ -241,6 +257,7 @@ public class NotificationListener extends NotificationListenerService {
     public void onNotificationRemoved(final StatusBarNotification sbn) {
         if (sbn != null) {
             mWorkerHandler.obtainMessage(MSG_NOTIFICATION_REMOVED, sbn).sendToTarget();
+            mNotificationManager.onNotificationRemoved(sbn);
         }
     }
 
