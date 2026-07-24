@@ -24,9 +24,8 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.core.os.bundleOf
-import app.lawnchair.ui.theme.EdgeToEdge
-import app.lawnchair.ui.theme.LawnchairTheme
-import app.lawnchair.util.unsafeLazy
+import com.android.launcher3.nexus.bottombar.lawnchair.util.unsafeLazy
+import com.android.settingslib.spa.framework.theme.SettingsTheme
 import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
 
@@ -46,8 +45,7 @@ class BlankActivity : ComponentActivity() {
             return
         }
         setContent {
-            LawnchairTheme {
-                EdgeToEdge()
+            SettingsTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = BottomSheetDefaults.ScrimColor,

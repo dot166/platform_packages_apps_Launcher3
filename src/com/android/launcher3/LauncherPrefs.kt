@@ -271,7 +271,7 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
         @JvmField val smartspaceNowPlaying = backedUpItem("enable_smartspace_now_playing", true)
         @JvmField val smartspaceOnboarding = backedUpItem("enable_smartspace_onboarding", true)
         @JvmField val smartspaceShowDate = backedUpItem("smartspace_show_date", true)
-        @JvmField val smartspaceShowTime = backedUpItem("smartspace_show_time", false)
+        @JvmField val smartspaceShowTime = backedUpItem("smartspace_show_time", true)
         @JvmField val smartspaceTimeFormat = backedUpItem("smartspace_time_format", "system")
         @JvmField val smartspaceCalendar = backedUpItem("smartspace_calendar", "gregorian")
         // hidden always true pref to force the config button to be there

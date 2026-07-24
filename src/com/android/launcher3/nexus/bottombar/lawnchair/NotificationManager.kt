@@ -3,10 +3,10 @@ package com.android.launcher3.nexus.bottombar.lawnchair
 import android.content.Context
 import android.content.pm.PackageManager
 import android.service.notification.StatusBarNotification
-import app.lawnchair.util.checkPackagePermission
 import com.android.launcher3.dagger.ApplicationContext
 import com.android.launcher3.dagger.LauncherAppComponent
 import com.android.launcher3.dagger.LauncherAppSingleton
+import com.android.launcher3.nexus.bottombar.lawnchair.util.checkPackagePermission
 import com.android.launcher3.notification.NotificationListener
 import com.android.launcher3.util.DaggerSingletonObject
 import com.android.launcher3.util.SafeCloseable

@@ -26,8 +26,8 @@ class SmartspaceViewContainer @JvmOverloads constructor(
         smartspaceView = inflater.inflate(R.layout.bottom_bar, this, false) as BcSmartspaceView
         smartspaceView.previewMode = previewMode
         val dp = InvariantDeviceProfile.INSTANCE.get(context).getDeviceProfile(context)
-        val leftPadding = dp.widgetPadding.left
-        val rightPadding = dp.widgetPadding.right
+        val leftPadding = dp.workspaceProfile.widgetPadding.left
+        val rightPadding = dp.workspaceProfile.widgetPadding.right
         smartspaceView.setPadding(leftPadding, top, rightPadding, bottom)
         //setOnLongClickListener {
         //    openOptions()

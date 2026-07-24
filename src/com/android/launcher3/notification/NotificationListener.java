@@ -69,7 +69,7 @@ public class NotificationListener extends NotificationListenerService {
     private final Handler mWorkerHandler;
     private final Ranking mTempRanking = new Ranking();
 
-    private boolean mIsConnected = false;
+    private static boolean mIsConnected = false;
 
     /** Maps packages to their DotInfo's . */
     private final Map<PackageUserKey, DotInfo> mPackageUserToDotInfos = new HashMap<>();

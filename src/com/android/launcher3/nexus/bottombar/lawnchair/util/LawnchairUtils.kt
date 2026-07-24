@@ -19,6 +19,7 @@ package com.android.launcher3.nexus.bottombar.lawnchair.util
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
+import android.content.pm.PackageInfo.REQUESTED_PERMISSION_GRANTED
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Build
@@ -29,4 +30,17 @@ private val pendingIntentTagId =
     Resources.getSystem().getIdentifier("pending_intent_tag", "id", "android")
 
 val View?.pendingIntent get() = this?.getTag(pendingIntentTagId) as? PendingIntent
+
+fun Context.checkPackagePermission(packageName: String, permissionName: String): Boolean {
+    try {
+        val info = packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
+        info.requestedPermissions?.forEachIndexed { index, s ->
+            if (s == permissionName) {
+                return info.requestedPermissionsFlags?.get(index)?.hasFlag(REQUESTED_PERMISSION_GRANTED)!!
+            }
+        }
+    } catch (_: PackageManager.NameNotFoundException) {
+    }
+    return false
+}
 

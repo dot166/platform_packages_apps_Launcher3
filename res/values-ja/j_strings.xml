@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2026 ._______166
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="preview_label">プレビュー</string>
+    <string name="action_customize">カスタマイズ</string>
+    <string name="what_to_show">表示する項目</string>
+    <!-- Date formats -->
+    <string name="smartspace_calendar_gregorian">グレゴリオ暦</string>
+    <string name="smartspace_calendar_persian">ペルシア暦</string>
+    <string name="smartspace_calendar_lunar">月齢</string>
+
+    <string name="generic_smartspace_concatenated_desc">%1$s、%2$s</string>
+
+    <!-- Battery labels -->
+    <string name="smartspace_battery_fast_charging">急速充電中</string>
+    <string name="smartspace_battery_slow_charging">低速充電中</string>
+    <string name="smartspace_battery_charging">充電中</string>
+    <string name="smartspace_battery_full">充電完了</string>
+    <string name="smartspace_battery_low">バッテリー残量の低下</string>
+    <string name="battery_charging_percentage_charging_time">"%1$d%% — 充電完了まで %2$s"</string>
+
+    <!-- Data and time format settings -->
+    <string name="smartspace_calendar">カレンダー</string>
+    <string name="smartspace_date_and_time">日付と時刻</string>
+    <string name="smartspace_date">日付</string>
+    <string name="smartspace_time">時刻</string>
+    <string name="smartspace_time_format">時刻の形式</string>
+    <string name="smartspace_time_follow_system">システムに従う</string>
+    <string name="smartspace_time_12_hour_format">12時間表記</string>
+    <string name="smartspace_time_24_hour_format">24時間表記</string>
+
+    <!-- Available targets -->
+    <string name="smartspace_weather">天気</string>
+    <string name="smartspace_battery_status">バッテリーの状態</string>
+    <string name="smartspace_torch">ライトの状態</string>
+    <string name="smartspace_now_playing">現在再生中</string>
+    <string name="smartspace_onboarding">初期画面</string>
+
+    <!-- Torch strings -->
+    <string name="torch_status_on">ライトをオン</string>
+    <string name="torch_action_off">タップしてオフにする</string>
+
+    <!-- Onboarding strings -->
+    <string name="onboarding_open_settings_title">Launcher3をセットアップする</string>
+    <string name="onboarding_open_settings_subtitle">ホーム画面を長押しして設定を開きます</string>
+
+    <string name="onboarding_welcome">Launcher3 へようこそ！</string>
+    <string name="onboarding_swipe_up">上にスワイプしてアプリドロワーを開く</string>
+
+    <!-- Setup settings -->
+    <string name="smartspace_requires_setup">タップでセットアップ</string>
+    <string name="event_provider_missing_notification_dots"><xliff:g example="My Provider" id="providerName">%1$s</xliff:g>を使用するには、通知ドットの機能をオンにします</string>
+
+    <!-- Miscellaneous Smartspace strings -->
+    <string name="accessibility_smartspace_page">%1$d/%2$d ページ</string>
+</resources>

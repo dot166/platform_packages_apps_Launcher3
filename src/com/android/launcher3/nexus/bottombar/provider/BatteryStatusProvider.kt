@@ -7,9 +7,7 @@ import android.graphics.drawable.Icon
 import android.os.BatteryManager
 import android.util.Log
 import androidx.core.content.getSystemService
-import com.android.launcher3.LauncherPrefs
 import com.android.launcher3.R
-import com.android.launcher3.Utilities
 import com.android.launcher3.nexus.bottombar.lawnchair.util.broadcastReceiverFlow
 import com.android.launcher3.nexus.bottombar.lawnchair.util.formatShortElapsedTimeRoundingUpToMinutes
 import com.android.launcher3.nexus.bottombar.model.SmartspaceAction
@@ -82,13 +80,10 @@ class BatteryStatusProvider(context: Context) :
     }
 
     private fun computeChargeTimeRemaining(): Long {
-        if (!Utilities.ATLEAST_P) return -1
         return runCatching { batteryManager?.computeChargeTimeRemaining() ?: -1 }.getOrDefault(-1)
     }
 
     private fun getChargingWattage(intent: Intent): Float {
-        if (!Utilities.ATLEAST_O) return 0f
-
         val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager.BATTERY_STATUS_UNKNOWN)
         val charging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
         if (!charging) return 0f

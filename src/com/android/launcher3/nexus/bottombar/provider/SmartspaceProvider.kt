@@ -13,7 +13,6 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.os.IBinder
 import android.util.Log
-import androidx.core.content.ContextCompat
 import com.android.launcher3.R
 import com.android.launcher3.dagger.ApplicationContext
 import com.android.launcher3.dagger.LauncherAppComponent
@@ -40,8 +39,6 @@ class SmartspaceProvider @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : SafeCloseable, ServiceConnection {
 
-    private val tagLog = javaClass.simpleName as String
-
     val dataSources = MutableStateFlow<List<SmartspaceDataSource>>(emptyList())
     private val providers: MutableList<Pair<ComponentName, IBottomBarProvider>> = mutableListOf()
     val action = "com.android.launcher3.nexus.bottombar.BOTTOM_BAR_PROVIDER"
@@ -59,6 +56,7 @@ class SmartspaceProvider @Inject constructor(
             addAction(Intent.ACTION_PACKAGE_REPLACED)
             addAction(Intent.ACTION_PACKAGE_REMOVED)
             addAction(Intent.ACTION_PACKAGE_FULLY_REMOVED)
+            addAction(Intent.ACTION_LOCALE_CHANGED)
         }
         context.registerReceiver(
             object : BroadcastReceiver() {
@@ -73,8 +71,7 @@ class SmartspaceProvider @Inject constructor(
             i,
         )
 
-        ContextCompat.registerReceiver(
-            context,
+        context.registerReceiver(
             object : BroadcastReceiver() {
                 override fun onReceive(
                     context: Context,
@@ -92,7 +89,7 @@ class SmartspaceProvider @Inject constructor(
                 }
             },
             IntentFilter(BottomBarDataSource.ACTION_BOTTOM_BAR_TARGETS_UPDATED),
-            ContextCompat.RECEIVER_EXPORTED,
+            Context.RECEIVER_EXPORTED,
         )
 
         refreshProviders()

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
 import android.provider.Settings
-import com.android.launcher3.LauncherPrefs
 import com.android.launcher3.R
 import com.android.launcher3.nexus.bottombar.lawnchair.BlankActivity
 import com.android.launcher3.nexus.bottombar.lawnchair.getAppName
@@ -16,11 +15,13 @@ import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
 import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferences
 import com.android.launcher3.notification.NotificationListener
 import com.android.launcher3.settings.SettingsActivity
+import com.android.launcher3.util.Executors.MAIN_EXECUTOR
 import com.android.launcher3.util.SettingsCache
 import com.android.launcher3.util.SettingsCache.NOTIFICATION_BADGING_URI
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
+
 
 class NowPlayingProvider(context: Context) :
     SmartspaceDataSource(
@@ -85,14 +86,11 @@ class NowPlayingProvider(context: Context) :
     }
 
     fun notificationDotsEnabled(context: Context) = callbackFlow {
-        val observer = SettingsCache.OnChangeListener {
-            val enabled = SettingsCache.INSTANCE.get(context).getValue(NOTIFICATION_BADGING_URI)
-            trySend(enabled)
-        }
-        val settingsCache = SettingsCache.INSTANCE.get(context)
-        observer.onSettingsChanged(false)
-        settingsCache.register(NOTIFICATION_BADGING_URI, observer)
-        awaitClose { settingsCache.unregister(NOTIFICATION_BADGING_URI, observer) }
+        val observer = SettingsCache.INSTANCE.get(context).getListenableRef(NOTIFICATION_BADGING_URI)
+            .forEach(MAIN_EXECUTOR) { dotsEnabled ->
+                trySend(dotsEnabled)
+            }
+        awaitClose { observer.close() }
     }
 
     fun isNotificationServiceEnabled(context: Context): Boolean {
