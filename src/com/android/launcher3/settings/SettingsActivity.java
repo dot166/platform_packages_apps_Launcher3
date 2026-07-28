@@ -51,9 +51,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.launcher3.BuildConfig;
 import com.android.launcher3.InvariantDeviceProfile;
 import com.android.launcher3.LauncherFiles;
+import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
 import com.android.launcher3.display.DisplayController;
 import com.android.launcher3.display.LauncherDisplayInfo;
+import com.android.launcher3.util.OnboardingPrefs;
 import com.android.launcher3.util.SafeCloseable;
 import com.android.launcher3.util.SettingsCache;
 
@@ -111,6 +113,7 @@ public class SettingsActivity extends CollapsingToolbarBaseActivity
             // Display the fragment as the main content.
             fm.beginTransaction().replace(com.android.settingslib.collapsingtoolbar.R.id.content_frame, f).commit();
         }
+        LauncherPrefs.get(this).put(OnboardingPrefs.HAS_OPENED_SETTINGS, true);
     }
 
     private boolean startPreference(String fragment, Bundle args, String key) {
