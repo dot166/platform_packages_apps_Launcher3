@@ -120,6 +120,14 @@ public class LauncherClient {
             Message.obtain(this.mUIHandler, 4, i, 0).sendToTarget();
         }
 
+        public void startActivity(Intent intent, Bundle bundle) {
+            if (this.mClient == null) {
+                return; // abandon ship, impossible
+            }
+            mClient.mActivity.startActivity(intent, bundle);
+            mClient.hideOverlay(true);
+        }
+
         public final boolean handleMessage(Message message) {
             if (this.mClient == null) {
                 return true;
