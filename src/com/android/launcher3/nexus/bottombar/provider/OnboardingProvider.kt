@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.drawable.Icon
+import com.android.launcher3.LauncherPrefChangeListener
+import com.android.launcher3.LauncherPrefs
 import com.android.launcher3.LauncherPrefs.Companion.getPrefs
 import com.android.launcher3.R
 import com.android.launcher3.nexus.bottombar.model.SmartspaceAction
@@ -23,17 +25,14 @@ class OnboardingProvider(context: Context) :
     ) {
 
     companion object {
-        const val PREF_HAS_OPENED_SETTINGS = "pref_hasOpenedSettings"
-
-        private val HOME_BOUNCE_KEY = OnboardingPrefs.HOME_BOUNCE_SEEN.sharedPrefKey
         private val PREF_KEYS = setOf(
-            PREF_HAS_OPENED_SETTINGS,
-            HOME_BOUNCE_KEY,
+            OnboardingPrefs.HAS_OPENED_SETTINGS.sharedPrefKey,
+            OnboardingPrefs.HOME_BOUNCE_SEEN.sharedPrefKey,
         )
 
         private const val REQUEST_CODE_SETTINGS = 1
     }
-    private val prefs = getPrefs(context)
+    private val prefs = LauncherPrefs.get(context)
 
     private val lawnSettingsIntent: Intent = Intent(Intent.ACTION_APPLICATION_PREFERENCES)
         .setPackage(context.packageName)
@@ -45,40 +44,33 @@ class OnboardingProvider(context: Context) :
         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
     )
 
-    /** No-op. */
-    private val lawnOnboardingPendingIntent: PendingIntent = lawnSettingsPendingIntent
-
     override val internalTargets = callbackFlow {
-        val prefsListener = SharedPreferences.OnSharedPreferenceChangeListener {
-                sharedPreferences,
+        val prefsListener = LauncherPrefChangeListener {
                 key,
             ->
-            if (key == null) return@OnSharedPreferenceChangeListener
+            if (key == null) return@LauncherPrefChangeListener
 
-            val isRelevant = when (sharedPreferences) {
-                prefs -> key in PREF_KEYS
-                else -> false
-            }
-            if (!isRelevant) return@OnSharedPreferenceChangeListener
+            val isRelevant = key in PREF_KEYS
+            if (!isRelevant) return@LauncherPrefChangeListener
 
             trySend(listOfNotNull(getSmartspaceTarget()))
         }
 
-        prefs.registerOnSharedPreferenceChangeListener(prefsListener)
+        prefs.addListener(prefsListener)
 
         trySend(listOfNotNull(getSmartspaceTarget()))
 
         awaitClose {
-            prefs.unregisterOnSharedPreferenceChangeListener(prefsListener)
+            prefs.removeListener(prefsListener)
         }
     }
 
     private fun hasSeenHomeBounce(): Boolean {
-        return prefs.getBoolean(HOME_BOUNCE_KEY, false)
+        return OnboardingPrefs.HOME_BOUNCE_SEEN.get(context)
     }
 
     private fun hasSeenSettings(): Boolean {
-        return prefs.getBoolean(PREF_HAS_OPENED_SETTINGS, false)
+        return OnboardingPrefs.HAS_OPENED_SETTINGS.get(context)
     }
 
     private fun getSmartspaceTarget(): SmartspaceTarget? {
