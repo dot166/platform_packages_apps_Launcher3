@@ -9,12 +9,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.text.layoutDirection
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import com.android.launcher3.R
 import com.android.launcher3.nexus.bottombar.model.SmartspaceAction
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
-import com.android.launcher3.nexus.bottombar.model.hasIntent
 import java.util.Locale
 import java.util.UUID
 
@@ -23,7 +20,6 @@ class BcSmartspaceCard @JvmOverloads constructor(
     attrs: AttributeSet? = null,
 ) : LinearLayout(context, attrs) {
 
-    private var baseActionIconSubtitleView: DoubleShadowTextView? = null
     private var dateView: IcuDateTextView? = null
     private var dndImageView: ImageView? = null
     private var extrasGroup: ViewGroup? = null
@@ -42,7 +38,6 @@ class BcSmartspaceCard @JvmOverloads constructor(
         dateView = findViewById(R.id.date)
         titleTextView = findViewById(R.id.title_text)
         subtitleTextView = findViewById(R.id.subtitle_text)
-        baseActionIconSubtitleView = findViewById(R.id.base_action_icon_subtitle)
         extrasGroup = findViewById(R.id.smartspace_extras_group)
         topPadding = paddingTop
         extrasGroup?.let {
@@ -55,7 +50,6 @@ class BcSmartspaceCard @JvmOverloads constructor(
     fun setSmartspaceTarget(target: SmartspaceTarget, multipleCards: Boolean) {
         this.target = target
         val headerAction = target.headerAction
-        val baseAction = target.baseAction
         usePageIndicatorUi = multipleCards
 
         if (headerAction != null) {
@@ -79,53 +73,22 @@ class BcSmartspaceCard @JvmOverloads constructor(
             updateIconTint()
         }
 
-        if (baseAction != null && baseActionIconSubtitleView != null) {
-            val icon = BcSmartSpaceUtil.getIconDrawable(baseAction.icon, context)
-                ?.let { DoubleShadowIconDrawable(it, context) }
-            val iconView = baseActionIconSubtitleView!!
-            if (icon != null) {
-                icon.setTintList(null)
-                iconView.text = baseAction.subtitle
-                iconView.setCompoundDrawablesRelative(icon, null, null, null)
-                iconView.isVisible = true
-                BcSmartSpaceUtil.setOnClickListener(iconView, baseAction, null, "BcSmartspaceCard")
-                setFormattedContentDescription(iconView, baseAction.subtitle, baseAction.contentDescription)
-            } else {
-                iconView.isInvisible = true
-                iconView.setOnClickListener(null)
-                iconView.contentDescription = null
-            }
-        }
-
         dateView?.let {
             val calendarAction = SmartspaceAction(
-                id = headerAction?.id ?: baseAction?.id ?: UUID.randomUUID().toString(),
+                id = headerAction?.id ?: UUID.randomUUID().toString(),
                 title = "unusedTitle",
                 intent = BcSmartSpaceUtil.getOpenCalendarIntent(),
             )
             BcSmartSpaceUtil.setOnClickListener(it, calendarAction, null, "BcSmartspaceCard")
         }
 
-        when {
-            headerAction.hasIntent -> {
-                BcSmartSpaceUtil.setOnClickListener(this, headerAction, null, "BcSmartspaceCard")
-            }
-
-            baseAction.hasIntent -> {
-                BcSmartSpaceUtil.setOnClickListener(this, baseAction, null, "BcSmartspaceCard")
-            }
-
-            else -> {
-                BcSmartSpaceUtil.setOnClickListener(this, headerAction, null, "BcSmartspaceCard")
-            }
-        }
+        BcSmartSpaceUtil.setOnClickListener(this, headerAction, null, "BcSmartspaceCard")
     }
 
     fun setPrimaryTextColor(textColor: Int) {
         titleTextView?.setTextColor(textColor)
         dateView?.setTextColor(textColor)
         subtitleTextView?.setTextColor(textColor)
-        baseActionIconSubtitleView?.setTextColor(textColor)
         iconTintColor = textColor
         updateIconTint()
     }
