@@ -9,7 +9,7 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/smartspace_card_pager"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/qsb_widget_height"
+        android:layout_height="@dimen/enhanced_smartspace_height"
         android:layout_gravity="center" />
 
     <com.android.launcher3.nexus.bottombar.PageIndicator
@@ -18,6 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left|center_vertical|center_horizontal|center|start"
         android:importantForAccessibility="no"
-        android:paddingEnd="@dimen/page_indicator_padding_start"
+        android:paddingStart="@dimen/page_indicator_padding_start"
+        android:paddingTop="@dimen/page_indicator_padding_top_bottom"
+        android:paddingBottom="@dimen/page_indicator_padding_top_bottom"
         android:visibility="visible" />
 </com.android.launcher3.nexus.bottombar.BcSmartspaceView>

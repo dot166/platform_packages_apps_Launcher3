@@ -516,13 +516,6 @@ constructor(
                 occupied.markCells(entry, true)
             }
         }
-        if (Flags.injectableModelItems()) {
-            extraItemsProvider.get().forEach {
-                if (it.container == Favorites.CONTAINER_DESKTOP && it.screenId == screenId) {
-                    occupied.markCells(it, true)
-                }
-            }
-        }
 
         val iterator = itemsToPlace.mRemainingItemsToPlace.iterator()
         while (iterator.hasNext()) {

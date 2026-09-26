@@ -3,13 +3,10 @@ package com.android.launcher3.nexus.bottombar.provider
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.drawable.Icon
 import com.android.launcher3.LauncherPrefChangeListener
 import com.android.launcher3.LauncherPrefs
-import com.android.launcher3.LauncherPrefs.Companion.getPrefs
 import com.android.launcher3.R
-import com.android.launcher3.nexus.bottombar.model.SmartspaceAction
 import com.android.launcher3.nexus.bottombar.model.SmartspaceScores
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
 import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferences
@@ -56,12 +53,12 @@ class OnboardingProvider(context: Context) :
             trySend(listOfNotNull(getSmartspaceTarget()))
         }
 
-        prefs.addListener(prefsListener)
+        prefs.addListener(prefsListener, OnboardingPrefs.HAS_OPENED_SETTINGS, OnboardingPrefs.HOME_BOUNCE_SEEN)
 
         trySend(listOfNotNull(getSmartspaceTarget()))
 
         awaitClose {
-            prefs.removeListener(prefsListener)
+            prefs.removeListener(prefsListener, OnboardingPrefs.HAS_OPENED_SETTINGS, OnboardingPrefs.HOME_BOUNCE_SEEN)
         }
     }
 
@@ -78,13 +75,10 @@ class OnboardingProvider(context: Context) :
             !hasSeenHomeBounce() -> {
                 SmartspaceTarget(
                     id = "onboarding-swipe",
-                    headerAction = SmartspaceAction(
-                        id = "onboarding-swipe-action",
-                        icon = null,
-                        title = context.getString(R.string.onboarding_welcome),
-                        subtitle = context.getString(R.string.onboarding_swipe_up),
-                        pendingIntent = null,
-                    ),
+                    icon = null,
+                    title = context.getString(R.string.onboarding_welcome),
+                    subtitle = context.getString(R.string.onboarding_swipe_up),
+                    pendingIntent = null,
                     score = SmartspaceScores.SCORE_ONBOARDING,
                     featureType = SmartspaceTarget.FeatureType.FEATURE_ONBOARDING,
                 )
@@ -93,13 +87,10 @@ class OnboardingProvider(context: Context) :
             !hasSeenSettings() -> {
                 SmartspaceTarget(
                     id = "onboarding-settings",
-                    headerAction = SmartspaceAction(
-                        id = "onboarding-settings-action",
-                        icon = Icon.createWithResource(context, R.drawable.ic_lightbulb),
-                        title = context.getString(R.string.onboarding_open_settings_title),
-                        subtitle = context.getString(R.string.onboarding_open_settings_subtitle),
-                        pendingIntent = lawnSettingsPendingIntent,
-                    ),
+                    icon = Icon.createWithResource(context, R.drawable.ic_lightbulb),
+                    title = context.getString(R.string.onboarding_open_settings_title),
+                    subtitle = context.getString(R.string.onboarding_open_settings_subtitle),
+                    pendingIntent = lawnSettingsPendingIntent,
                     score = SmartspaceScores.SCORE_ONBOARDING,
                     featureType = SmartspaceTarget.FeatureType.FEATURE_ONBOARDING,
                 )

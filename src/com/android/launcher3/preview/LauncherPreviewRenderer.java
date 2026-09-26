@@ -379,7 +379,7 @@ public class LauncherPreviewRenderer extends BaseContext
         if (qsbOnFirstScreen()) {
             CellLayout firstScreen = mWorkspaceScreens.get(FIRST_SCREEN_ID);
             if (firstScreen != null) {
-                View qsb = mHomeElementInflater.inflate(R.layout.qsb_preview, firstScreen, false);
+                View qsb = mHomeElementInflater.inflate(R.layout.search_container_workspace, firstScreen, false);
                 // TODO: set bgHandler on qsb when it is BaseTemplateCard, which requires API
                 //  changes.
                 CellLayoutLayoutParams lp = new CellLayoutLayoutParams(

@@ -9,10 +9,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.core.content.getSystemService
-import com.android.launcher3.LauncherPrefs
-
 import com.android.launcher3.R
-import com.android.launcher3.nexus.bottombar.model.SmartspaceAction
 import com.android.launcher3.nexus.bottombar.model.SmartspaceScores
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
 import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferences
@@ -82,35 +79,32 @@ class TorchProvider(context: Context) :
     private fun getSmartspaceTarget(): SmartspaceTarget {
         return SmartspaceTarget(
             id = "torchStatus",
-            headerAction = SmartspaceAction(
-                id = "torchStatusAction",
-                icon = Icon.createWithResource(context, R.drawable.ic_flashlight_off),
-                title = context.getString(R.string.torch_status_on),
-                subtitle = context.getString(R.string.torch_action_off),
-                onClick = Runnable {
-                    val cameraManager = cameraManager ?: return@Runnable
-                    try {
-                        cameraManager.cameraIdList.forEach { cameraId ->
-                            try {
-                                val hasFlash = cameraManager
-                                    .getCameraCharacteristics(cameraId)
-                                    .get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true
-                                if (hasFlash) {
-                                    cameraManager.setTorchMode(cameraId, false)
-                                }
-                            } catch (e: CameraAccessException) {
-                                Log.e(
-                                    TAG,
-                                    "Failed to turn off torch for camera $cameraId: ${e.message}",
-                                    e,
-                                )
+            icon = Icon.createWithResource(context, R.drawable.ic_flashlight_off),
+            title = context.getString(R.string.torch_status_on),
+            subtitle = context.getString(R.string.torch_action_off),
+            onClick = Runnable {
+                val cameraManager = cameraManager ?: return@Runnable
+                try {
+                    cameraManager.cameraIdList.forEach { cameraId ->
+                        try {
+                            val hasFlash = cameraManager
+                                .getCameraCharacteristics(cameraId)
+                                .get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true
+                            if (hasFlash) {
+                                cameraManager.setTorchMode(cameraId, false)
                             }
+                        } catch (e: CameraAccessException) {
+                            Log.e(
+                                TAG,
+                                "Failed to turn off torch for camera $cameraId: ${e.message}",
+                                e,
+                            )
                         }
-                    } catch (e: CameraAccessException) {
-                        Log.e(TAG, "Failed to access camera list", e)
                     }
-                },
-            ),
+                } catch (e: CameraAccessException) {
+                    Log.e(TAG, "Failed to access camera list", e)
+                }
+            },
             score = SmartspaceScores.SCORE_FLASHLIGHT,
             featureType = SmartspaceTarget.FeatureType.FEATURE_FLASHLIGHT,
         )

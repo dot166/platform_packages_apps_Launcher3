@@ -23,7 +23,6 @@ import static com.android.launcher3.Flags.enableCursorDrivenWorkflows;
 import static com.android.launcher3.Flags.enableFileSystemFoldersAsDropTargets;
 import static com.android.launcher3.Flags.enableSystemDragToOtherApps;
 import static com.android.launcher3.Flags.enableTaskbarDragAndDrop;
-import static com.android.launcher3.Flags.injectableModelItems;
 import static com.android.launcher3.LauncherAnimUtils.SPRING_LOADED_EXIT_DELAY;
 import static com.android.launcher3.LauncherSettings.Favorites.CONTAINER_ALL_APPS_PREDICTION;
 import static com.android.launcher3.LauncherSettings.Favorites.CONTAINER_DESKTOP;
@@ -1309,40 +1308,10 @@ public class Workspace<T extends View & PageIndicator> extends PagedView<T>
         float x = ev.getX();
         float y = ev.getY();
 
-        mIsDownOverHorizontalScrollContent = false;
-        if (injectableModelItems()) {
-            int childCount = getChildCount();
-            if (childCount <= 0) return;
-            int currentPage = getCurrentPage();
-            int lastVisiblePage = getPanelCount() + currentPage;
-            CellLayout targetPage = null;
-            for (int index = currentPage; index < lastVisiblePage && index < childCount; index++) {
-                CellLayout page = (CellLayout) getPageAt(index);
-                int left = page.getLeft() - getScrollX();
-
-                if (x >= left && x <= (left + page.getWidth())) {
-                    targetPage = page;
-                    break;
-                }
-            }
-            if (targetPage == null) return;
-
-            // Find the item at the original down point
-            final float[] tempFXY = new float[] {x, y};
-            Utilities.mapCoordInSelfToDescendant(targetPage, this, tempFXY);
-            int[] coordinates = new int[2];
-            targetPage.pointToCellExact((int) tempFXY[0], (int) tempFXY[1], coordinates);
-            View targetItem = targetPage.getChildAt(coordinates[0], coordinates[1]);
-
-            mIsDownOverHorizontalScrollContent =
-                    (targetItem instanceof ScrollableContent sc) && sc.canScrollHorizontally();
-            return;
-        }
-
         if (mFirstPagePinnedItem != null) {
             final float[] tempFXY = new float[2];
-            tempFXY[0] = x;
             tempFXY[1] = y;
+            tempFXY[0] = x;
             Utilities.mapCoordInSelfToDescendant(mFirstPagePinnedItem, this, tempFXY);
             mIsDownOverHorizontalScrollContent = mFirstPagePinnedItem.getLeft() <= tempFXY[0]
                     && mFirstPagePinnedItem.getRight() >= tempFXY[0]
