@@ -45,12 +45,9 @@
         android:layout_marginTop="8dp"
         android:gravity="top"
         android:orientation="horizontal"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHeight_min="wrap"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/smartspace_subtitle_group">
-
-        <include layout="@layout/bottom_bar_extras" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

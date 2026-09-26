@@ -11,7 +11,7 @@ import android.util.Log
 import android.view.View
 import com.android.launcher3.R
 import com.android.launcher3.Utilities
-import com.android.launcher3.nexus.bottombar.model.SmartspaceAction
+import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
 
 object BcSmartSpaceUtil {
     fun getIconDrawable(icon: Icon?, context: Context): Drawable? {
@@ -25,7 +25,7 @@ object BcSmartSpaceUtil {
 
     fun setOnClickListener(
         view: View?,
-        action: SmartspaceAction?,
+        target: SmartspaceTarget,
         onClickListener: View.OnClickListener? = null,
         str: String?,
     ) {
@@ -35,22 +35,22 @@ object BcSmartSpaceUtil {
                 ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED,
             )
         }
-        if (view == null || action == null) {
+        if (view == null) {
             Log.e(str, "No tap action can be set up")
             return
         }
         view.setOnClickListener {
             runCatching {
-                if (action.intent != null) {
-                    view.context.startActivity(action.intent)
-                } else if (action.pendingIntent != null) {
+                if (target.intent != null) {
+                    view.context.startActivity(target.intent)
+                } else if (target.pendingIntent != null) {
                     if (Utilities.ATLEAST_U) {
-                        action.pendingIntent?.send(options.toBundle())
+                        target.pendingIntent?.send(options.toBundle())
                     } else {
-                        action.pendingIntent?.send()
+                        target.pendingIntent?.send()
                     }
-                } else if (action.onClick != null) {
-                    action.onClick?.run()
+                } else if (target.onClick != null) {
+                    target.onClick?.run()
                 }
                 onClickListener?.onClick(view)
             }

@@ -1,8 +1,10 @@
 package com.android.launcher3.nexus.bottombar
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.text.TextUtils
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -10,10 +12,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.text.layoutDirection
 import com.android.launcher3.R
-import com.android.launcher3.nexus.bottombar.model.SmartspaceAction
+import com.android.launcher3.nexus.bottombar.model.SmartspaceIconView
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
+import com.android.launcher3.nexus.bottombar.model.SmartspaceTextView
+import com.android.launcher3.nexus.bottombar.model.SmartspaceView
 import java.util.Locale
-import java.util.UUID
 
 class BcSmartspaceCard @JvmOverloads constructor(
     context: Context,
@@ -21,12 +24,9 @@ class BcSmartspaceCard @JvmOverloads constructor(
 ) : LinearLayout(context, attrs) {
 
     private var dateView: IcuDateTextView? = null
-    private var dndImageView: ImageView? = null
     private var extrasGroup: ViewGroup? = null
     private var iconDrawable: DoubleShadowIconDrawable? = null
     private var iconTintColor = 0
-    private var nextAlarmImageView: ImageView? = null
-    private var nextAlarmTextView: TextView? = null
     private var subtitleTextView: TextView? = null
     private lateinit var target: SmartspaceTarget
     private var titleTextView: TextView? = null
@@ -40,49 +40,39 @@ class BcSmartspaceCard @JvmOverloads constructor(
         subtitleTextView = findViewById(R.id.subtitle_text)
         extrasGroup = findViewById(R.id.smartspace_extras_group)
         topPadding = paddingTop
-        extrasGroup?.let {
-            dndImageView = it.findViewById(R.id.dnd_icon)
-            nextAlarmImageView = it.findViewById(R.id.alarm_icon)
-            nextAlarmTextView = it.findViewById(R.id.alarm_text)
-        }
     }
 
     fun setSmartspaceTarget(target: SmartspaceTarget, multipleCards: Boolean) {
         this.target = target
-        val headerAction = target.headerAction
         usePageIndicatorUi = multipleCards
 
-        if (headerAction != null) {
-            iconDrawable = BcSmartSpaceUtil.getIconDrawable(headerAction.icon, context)
-                ?.let { DoubleShadowIconDrawable(it, context) }
+        iconDrawable = BcSmartSpaceUtil.getIconDrawable(target.icon, context)
+            ?.let { DoubleShadowIconDrawable(it, context) }
 
-            var title: CharSequence? = headerAction.title
-            var subtitle = headerAction.subtitle
-            val hasTitle = target.featureType == SmartspaceTarget.FeatureType.FEATURE_WEATHER ||
-                !title.isNullOrEmpty()
-            val hasSubtitle = !subtitle.isNullOrEmpty()
-            if (!hasTitle) {
-                title = subtitle
+        var title: CharSequence? = target.title
+        var subtitle = target.subtitle
+        val hasTitle = target.featureType == SmartspaceTarget.FeatureType.INTERNAL_FEATURE_DATE_TIME ||
+            !title.isNullOrEmpty()
+        val hasSubtitle = !subtitle.isNullOrEmpty()
+        if (!hasTitle) {
+            title = subtitle
+        }
+        val contentDescription = target.contentDescription
+        setTitle(title, contentDescription, hasTitle != hasSubtitle)
+        if (!hasTitle || !hasSubtitle) {
+            subtitle = null
+        }
+        setSubtitle(subtitle, target.contentDescription)
+        updateIconTint()
+
+        extrasGroup?.let {
+            it.removeAllViews()
+            for (view in target.tiles) {
+                it.addView(view.inflateView(context))
             }
-            val contentDescription = headerAction.contentDescription
-            setTitle(title, contentDescription, hasTitle != hasSubtitle)
-            if (!hasTitle || !hasSubtitle) {
-                subtitle = null
-            }
-            setSubtitle(subtitle, headerAction.contentDescription)
-            updateIconTint()
         }
 
-        dateView?.let {
-            val calendarAction = SmartspaceAction(
-                id = headerAction?.id ?: UUID.randomUUID().toString(),
-                title = "unusedTitle",
-                intent = BcSmartSpaceUtil.getOpenCalendarIntent(),
-            )
-            BcSmartSpaceUtil.setOnClickListener(it, calendarAction, null, "BcSmartspaceCard")
-        }
-
-        BcSmartSpaceUtil.setOnClickListener(this, headerAction, null, "BcSmartspaceCard")
+        BcSmartSpaceUtil.setOnClickListener(this, target, null, "BcSmartspaceCard")
     }
 
     fun setPrimaryTextColor(textColor: Int) {
@@ -95,7 +85,7 @@ class BcSmartspaceCard @JvmOverloads constructor(
 
     fun setTitle(title: CharSequence?, contentDescription: CharSequence?, hasIcon: Boolean) {
         val titleView = titleTextView ?: return
-        val isRTL = Locale.getDefault().layoutDirection == View.LAYOUT_DIRECTION_RTL
+        val isRTL = Locale.getDefault().layoutDirection == LAYOUT_DIRECTION_RTL
         titleView.textAlignment = if (isRTL) TEXT_ALIGNMENT_TEXT_END else TEXT_ALIGNMENT_TEXT_START
         titleView.text = title
         titleView.setCompoundDrawablesRelative(
@@ -150,8 +140,59 @@ class BcSmartspaceCard @JvmOverloads constructor(
     private fun updateIconTint() {
         val icon = iconDrawable ?: return
         when (target.featureType) {
-            SmartspaceTarget.FeatureType.FEATURE_WEATHER -> icon.setTintList(null)
+            SmartspaceTarget.FeatureType.INTERNAL_FEATURE_DATE_TIME -> icon.setTintList(null)
             else -> icon.setTint(iconTintColor)
+        }
+    }
+
+    fun SmartspaceView.inflateView(ctx: Context): View {
+        when (this) {
+            is SmartspaceIconView -> {
+                if (color != null) {
+                    icon.tintList = ColorStateList.valueOf(color!!)
+                }
+                return ImageView(ctx).apply {
+                    setImageIcon(icon)
+                    contentDescription = this@inflateView.contentDescription
+                    layoutParams = LayoutParams(
+                        resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_icon_size),
+                        resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_icon_size)
+                    ).apply {
+                        gravity = Gravity.CENTER_VERTICAL
+                        marginEnd = (4 * resources.displayMetrics.density).toInt()
+                    }
+                    scaleType = ImageView.ScaleType.CENTER_INSIDE
+                }
+
+            }
+
+            is SmartspaceTextView -> {
+                return DoubleShadowTextView(ctx).apply {
+                    text = this@inflateView.text
+                    setTextAppearance(R.style.EnhancedSmartspaceTextSubtitle)
+                    layoutParams = LayoutParams(
+                        LayoutParams.WRAP_CONTENT,
+                        LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        gravity = Gravity.CENTER_VERTICAL
+                        marginEnd = (4 * resources.displayMetrics.density).toInt()
+                    }
+                }
+            }
+
+            else -> {
+                return DoubleShadowTextView(ctx).apply {
+                    text = "Unsupported View"
+                    setTextAppearance(R.style.EnhancedSmartspaceTextSubtitle)
+                    layoutParams = LayoutParams(
+                        LayoutParams.WRAP_CONTENT,
+                        LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        gravity = Gravity.CENTER_VERTICAL
+                        marginEnd = (4 * resources.displayMetrics.density).toInt()
+                    }
+                }
+            }
         }
     }
 }
