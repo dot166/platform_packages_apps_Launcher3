@@ -9,7 +9,6 @@ import android.provider.Settings
 import com.android.launcher3.R
 import com.android.launcher3.nexus.bottombar.lawnchair.BlankActivity
 import com.android.launcher3.nexus.bottombar.lawnchair.getAppName
-import com.android.launcher3.nexus.bottombar.model.SmartspaceAction
 import com.android.launcher3.nexus.bottombar.model.SmartspaceScores
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
 import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferences
@@ -54,14 +53,11 @@ class NowPlayingProvider(context: Context) :
         val intent = sbn?.notification?.contentIntent
         return SmartspaceTarget(
             id = "nowPlaying-${mediaInfo.hashCode()}",
-            headerAction = SmartspaceAction(
-                id = "nowPlayingAction-${mediaInfo.hashCode()}",
-                icon = icon,
-                title = title,
-                subtitle = subtitle,
-                pendingIntent = intent,
-                onClick = if (intent == null) Runnable { media.toggle(true) } else null,
-            ),
+            icon = icon,
+            title = title,
+            subtitle = subtitle,
+            pendingIntent = intent,
+            onClick = if (intent == null) Runnable { media.toggle(true) } else null,
             score = SmartspaceScores.SCORE_MEDIA,
             featureType = SmartspaceTarget.FeatureType.FEATURE_MEDIA,
         )

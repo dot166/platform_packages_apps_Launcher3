@@ -10,7 +10,6 @@ import androidx.core.content.getSystemService
 import com.android.launcher3.R
 import com.android.launcher3.nexus.bottombar.lawnchair.util.broadcastReceiverFlow
 import com.android.launcher3.nexus.bottombar.lawnchair.util.formatShortElapsedTimeRoundingUpToMinutes
-import com.android.launcher3.nexus.bottombar.model.SmartspaceAction
 import com.android.launcher3.nexus.bottombar.model.SmartspaceScores
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
 import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferences
@@ -56,7 +55,8 @@ class BatteryStatusProvider(context: Context) :
         }
         val chargingTimeRemaining = computeChargeTimeRemaining()
         val subtitle = if (charging && chargingTimeRemaining > 0) {
-            val chargingTime = formatShortElapsedTimeRoundingUpToMinutes(context, chargingTimeRemaining)
+            val chargingTime =
+                formatShortElapsedTimeRoundingUpToMinutes(context, chargingTimeRemaining)
             context.getString(
                 R.string.battery_charging_percentage_charging_time,
                 level,
@@ -68,12 +68,9 @@ class BatteryStatusProvider(context: Context) :
         val iconResId = if (charging) R.drawable.ic_charging else R.drawable.ic_battery_low
         return SmartspaceTarget(
             id = "batteryStatus",
-            headerAction = SmartspaceAction(
-                id = "batteryStatusAction",
-                icon = Icon.createWithResource(context, iconResId),
-                title = title,
-                subtitle = subtitle,
-            ),
+            icon = Icon.createWithResource(context, iconResId),
+            title = title,
+            subtitle = subtitle,
             score = score,
             featureType = SmartspaceTarget.FeatureType.FEATURE_CALENDAR,
         )

@@ -85,7 +85,7 @@ class CardPagerAdapter(context: Context) : PagerAdapter() {
         featureType: SmartspaceTarget.FeatureType,
     ): BcSmartspaceCard {
         val layout = when (featureType) {
-            SmartspaceTarget.FeatureType.FEATURE_WEATHER -> R.layout.bottom_bar_card_date
+            SmartspaceTarget.FeatureType.INTERNAL_FEATURE_DATE_TIME -> R.layout.bottom_bar_card_date
             else -> R.layout.bottom_bar_card
         }
         return LayoutInflater.from(container.context)

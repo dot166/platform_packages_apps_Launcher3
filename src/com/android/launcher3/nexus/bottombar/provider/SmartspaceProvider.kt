@@ -18,7 +18,6 @@ import com.android.launcher3.dagger.ApplicationContext
 import com.android.launcher3.dagger.LauncherAppComponent
 import com.android.launcher3.dagger.LauncherAppSingleton
 import com.android.launcher3.nexus.bottombar.lawnchair.util.dropWhileBusy
-import com.android.launcher3.nexus.bottombar.model.SmartspaceAction
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
 import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferenceActivity
 import com.android.launcher3.util.DaggerSingletonObject
@@ -43,12 +42,11 @@ class SmartspaceProvider @Inject constructor(
     private val providers: MutableList<Pair<ComponentName, IBottomBarProvider>> = mutableListOf()
     val action = "com.android.launcher3.nexus.bottombar.BOTTOM_BAR_PROVIDER"
     val builtInProviders = listOf(
-        SmartspaceWidgetReader(context),
+        DateProvider(context),
         BatteryStatusProvider(context),
         TorchProvider(context),
         NowPlayingProvider(context),
         OnboardingProvider(context),
-        ConfigProvider(context),
     )
 
     init {
@@ -120,11 +118,8 @@ class SmartspaceProvider @Inject constructor(
 
     private val setupTarget = SmartspaceTarget(
         id = "smartspaceSetup",
-        headerAction = SmartspaceAction(
-            id = "smartspaceSetupAction",
-            title = context.getString(R.string.smartspace_requires_setup),
-            intent = Intent(context, BottomBarPreferenceActivity::class.java),
-        ),
+        title = context.getString(R.string.smartspace_requires_setup),
+        intent = Intent(context, BottomBarPreferenceActivity::class.java),
         score = 999f,
         featureType = SmartspaceTarget.FeatureType.FEATURE_TIPS,
     )
