@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingEnd="@dimen/enhanced_smartspace_margin_start_launcher"
+    android:orientation="horizontal"
     android:baselineAligned="false">
 
     <include
@@ -10,4 +11,9 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:id="@+id/button_array"
+        android:layout_height="match_parent"/>
 </com.android.launcher3.nexus.bottombar.BcSmartspaceCard>

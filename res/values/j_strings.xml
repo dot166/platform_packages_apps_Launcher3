@@ -79,4 +79,6 @@
 
     <!-- Miscellaneous Smartspace strings -->
     <string name="accessibility_smartspace_page">Page %1$d of %2$d</string>
+    <string name="next_alarm_description">Next alarm: <xliff:g id="alarm_time" example="Wed 8:00am">%s</xliff:g></string>
+    <string name="desc_play_pause">Play or pause</string>
 </resources>
