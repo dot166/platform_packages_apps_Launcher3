@@ -36,10 +36,21 @@ public class MediaListener extends MediaController.Callback {
     private final Handler mHandler = new Handler();
     private final FlowCollector<List<StatusBarNotification>> mFlowCollector;
     private List<StatusBarNotification> mNotifications = Collections.emptyList();
+    private static final long PAUSED_TIMEOUT_MS = 60 * 60 * 1000; // 1 hour
+    private final Runnable mPausedTimeout;
 
     public MediaListener(Context context, Consumer<MediaListener> onChange) {
         mContext = context;
         mOnChange = () -> onChange.accept(this);
+        mPausedTimeout = () -> {
+            if (mTracking != null) {
+                PlaybackState state = mTracking.controller.getPlaybackState();
+                if (state != null && state.getState() == PlaybackState.STATE_PAUSED) {
+                    mTracking = null;
+                    mOnChange.run();
+                }
+            }
+        };
         NotificationManager notificationManager = NotificationManager.INSTANCE.get(context);
         mFlowCollector = new FlowCollector<>(
                 notificationManager.getNotifications(),
@@ -87,16 +98,26 @@ public class MediaListener extends MediaController.Callback {
 
         // If the current controller is not playing, stop tracking it.
         if (mTracking != null
-                && (!mControllers.contains(mTracking) || !mTracking.isPlaying())) {
+                && (!mControllers.contains(mTracking) || !mTracking.isAvailable())) {
             mTracking = null;
         }
 
         for (MediaNotificationController mnc : mControllers) {
             // Either we are not tracking a controller and this one is valid,
             // or this one is playing while the one we track is not.
-            if ((mTracking == null && mnc.isPlaying())
+            if ((mTracking == null && mnc.isAvailable())
                     || (mTracking != null && mnc.isPlaying() && !mTracking.isPlaying())) {
                 mTracking = mnc;
+            }
+        }
+
+        mHandler.removeCallbacks(mPausedTimeout);
+
+        if (mTracking != null) {
+            PlaybackState state = mTracking.controller.getPlaybackState();
+
+            if (state != null && state.getState() == PlaybackState.STATE_PAUSED) {
+                mHandler.postDelayed(mPausedTimeout, PAUSED_TIMEOUT_MS);
             }
         }
 
@@ -110,27 +131,21 @@ public class MediaListener extends MediaController.Callback {
         }
     }
 
-    void toggle(boolean finalClick) {
-        if (!finalClick) {
-            Log.d(TAG, "Toggle");
-            pressButton(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
-        }
+    void toggle() {
+        Log.d(TAG, "Toggle");
+        pressButton(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
     }
 
-    void next(boolean finalClick) {
-        if (finalClick) {
-            Log.d(TAG, "Next");
-            pressButton(KeyEvent.KEYCODE_MEDIA_NEXT);
-            pressButton(KeyEvent.KEYCODE_MEDIA_PLAY);
-        }
+    void next() {
+        Log.d(TAG, "Next");
+        pressButton(KeyEvent.KEYCODE_MEDIA_NEXT);
+        pressButton(KeyEvent.KEYCODE_MEDIA_PLAY);
     }
 
-    void previous(boolean finalClick) {
-        if (finalClick) {
-            Log.d(TAG, "Previous");
-            pressButton(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
-            pressButton(KeyEvent.KEYCODE_MEDIA_PLAY);
-        }
+    void previous() {
+        Log.d(TAG, "Previous");
+        pressButton(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
+        pressButton(KeyEvent.KEYCODE_MEDIA_PLAY);
     }
 
     private List<MediaNotificationController> getControllers() {
@@ -207,7 +222,15 @@ public class MediaListener extends MediaController.Callback {
             return info != null && info.title != null;
         }
 
-        private boolean isPlaying() {
+        private boolean isAvailable() {
+            if (!hasTitle()) return false;
+            PlaybackState playbackState = controller.getPlaybackState();
+            if (playbackState == null) return false;
+            return playbackState.getState() == PlaybackState.STATE_PLAYING
+                    || playbackState.getState() == PlaybackState.STATE_PAUSED;
+        }
+
+        public boolean isPlaying() {
             if (!hasTitle()) return false;
             PlaybackState playbackState = controller.getPlaybackState();
             if (playbackState == null) return false;

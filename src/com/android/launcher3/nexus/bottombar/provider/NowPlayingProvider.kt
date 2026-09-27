@@ -9,6 +9,7 @@ import android.provider.Settings
 import com.android.launcher3.R
 import com.android.launcher3.nexus.bottombar.lawnchair.BlankActivity
 import com.android.launcher3.nexus.bottombar.lawnchair.getAppName
+import com.android.launcher3.nexus.bottombar.model.SmartspaceIconButton
 import com.android.launcher3.nexus.bottombar.model.SmartspaceScores
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
 import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferences
@@ -57,7 +58,11 @@ class NowPlayingProvider(context: Context) :
             title = title,
             subtitle = subtitle,
             pendingIntent = intent,
-            onClick = if (intent == null) Runnable { media.toggle(true) } else null,
+            button = SmartspaceIconButton(
+                icon = if (tracking.isPlaying) { Icon.createWithResource(context, R.drawable.pause) } else { Icon.createWithResource(context, R.drawable.play) },
+                contentDescription = context.getString(R.string.desc_play_pause),
+                onClick = Runnable { media.toggle() },
+            ),
             score = SmartspaceScores.SCORE_MEDIA,
             featureType = SmartspaceTarget.FeatureType.FEATURE_MEDIA,
         )
