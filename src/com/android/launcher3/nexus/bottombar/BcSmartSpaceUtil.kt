@@ -26,7 +26,6 @@ object BcSmartSpaceUtil {
     fun setOnClickListener(
         view: View?,
         target: SmartspaceTarget,
-        onClickListener: View.OnClickListener? = null,
         str: String?,
     ) {
         val options = ActivityOptions.makeBasic()
@@ -52,7 +51,6 @@ object BcSmartSpaceUtil {
                 } else if (target.onClick != null) {
                     target.onClick?.run()
                 }
-                onClickListener?.onClick(view)
             }
         }
     }

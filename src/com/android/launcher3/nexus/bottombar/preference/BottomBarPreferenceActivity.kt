@@ -101,7 +101,7 @@ class BottomBarPreferenceActivity: ComponentActivity() {
                     factory = {
                         val view = SmartspaceViewContainer(it, previewMode = true)
                         val height = it.resources
-                            .getDimensionPixelSize(R.dimen.qsb_widget_height)
+                            .getDimensionPixelSize(R.dimen.enhanced_smartspace_height)
                         view.layoutParams =
                             ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height)
                         view

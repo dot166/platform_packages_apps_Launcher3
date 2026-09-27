@@ -1,9 +1,10 @@
 package com.android.launcher3.nexus.bottombar
 
+import android.app.ActivityOptions
 import android.content.Context
-import android.content.res.ColorStateList
 import android.text.TextUtils
 import android.util.AttributeSet
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +13,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.text.layoutDirection
 import com.android.launcher3.R
+import com.android.launcher3.Utilities
+import com.android.launcher3.nexus.bottombar.model.SmartspaceIconButton
 import com.android.launcher3.nexus.bottombar.model.SmartspaceIconView
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
+import com.android.launcher3.nexus.bottombar.model.SmartspaceTextButton
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTextView
 import com.android.launcher3.nexus.bottombar.model.SmartspaceView
 import java.util.Locale
@@ -25,6 +29,7 @@ class BcSmartspaceCard @JvmOverloads constructor(
 
     private var dateView: IcuDateTextView? = null
     private var extrasGroup: ViewGroup? = null
+    private var buttonArray: ViewGroup? = null
     private var iconDrawable: DoubleShadowIconDrawable? = null
     private var iconTintColor = 0
     private var subtitleTextView: TextView? = null
@@ -39,6 +44,7 @@ class BcSmartspaceCard @JvmOverloads constructor(
         titleTextView = findViewById(R.id.title_text)
         subtitleTextView = findViewById(R.id.subtitle_text)
         extrasGroup = findViewById(R.id.smartspace_extras_group)
+        buttonArray = findViewById(R.id.button_array)
         topPadding = paddingTop
     }
 
@@ -63,7 +69,7 @@ class BcSmartspaceCard @JvmOverloads constructor(
             subtitle = null
         }
         setSubtitle(subtitle, target.contentDescription)
-        updateIconTint()
+        updateIconTint(iconDrawable)
 
         extrasGroup?.let {
             it.removeAllViews()
@@ -72,7 +78,14 @@ class BcSmartspaceCard @JvmOverloads constructor(
             }
         }
 
-        BcSmartSpaceUtil.setOnClickListener(this, target, null, "BcSmartspaceCard")
+        buttonArray?.let {
+            it.removeAllViews()
+            if (target.button != null) {
+                it.addView(target.button!!.inflateView(context))
+            }
+        }
+
+        BcSmartSpaceUtil.setOnClickListener(this, target, "BcSmartspaceCard")
     }
 
     fun setPrimaryTextColor(textColor: Int) {
@@ -80,7 +93,13 @@ class BcSmartspaceCard @JvmOverloads constructor(
         dateView?.setTextColor(textColor)
         subtitleTextView?.setTextColor(textColor)
         iconTintColor = textColor
-        updateIconTint()
+        updateIconTint(iconDrawable)
+        extrasGroup?.let {
+            it.removeAllViews()
+            for (view in target.tiles) {
+                it.addView(view.inflateView(context))
+            }
+        }
     }
 
     fun setTitle(title: CharSequence?, contentDescription: CharSequence?, hasIcon: Boolean) {
@@ -137,7 +156,7 @@ class BcSmartspaceCard @JvmOverloads constructor(
         }
     }
 
-    private fun updateIconTint() {
+    private fun updateIconTint(iconDrawable: DoubleShadowIconDrawable?) {
         val icon = iconDrawable ?: return
         when (target.featureType) {
             SmartspaceTarget.FeatureType.INTERNAL_FEATURE_DATE_TIME -> icon.setTintList(null)
@@ -148,11 +167,11 @@ class BcSmartspaceCard @JvmOverloads constructor(
     fun SmartspaceView.inflateView(ctx: Context): View {
         when (this) {
             is SmartspaceIconView -> {
-                if (color != null) {
-                    icon.tintList = ColorStateList.valueOf(color!!)
-                }
                 return ImageView(ctx).apply {
-                    setImageIcon(icon)
+                    val drawable = BcSmartSpaceUtil.getIconDrawable(icon, context)
+                        ?.let { DoubleShadowIconDrawable(it, ctx) }
+                    updateIconTint(drawable)
+                    setImageDrawable(drawable)
                     contentDescription = this@inflateView.contentDescription
                     layoutParams = LayoutParams(
                         resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_icon_size),
@@ -170,6 +189,81 @@ class BcSmartspaceCard @JvmOverloads constructor(
                 return DoubleShadowTextView(ctx).apply {
                     text = this@inflateView.text
                     setTextAppearance(R.style.EnhancedSmartspaceTextSubtitle)
+                    layoutParams = LayoutParams(
+                        LayoutParams.WRAP_CONTENT,
+                        LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        gravity = Gravity.CENTER_VERTICAL
+                        marginEnd = (4 * resources.displayMetrics.density).toInt()
+                    }
+                }
+            }
+
+            is SmartspaceIconButton -> {
+                return ImageView(ctx).apply {
+                    val drawable = BcSmartSpaceUtil.getIconDrawable(icon, context)
+                        ?.let { DoubleShadowIconDrawable(it, ctx) }
+                    updateIconTint(drawable)
+                    setImageDrawable(drawable)
+                    contentDescription = this@inflateView.contentDescription
+                    val options = ActivityOptions.makeBasic()
+                    if (Utilities.ATLEAST_U) {
+                        options.setPendingIntentBackgroundActivityStartMode(
+                            ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED,
+                        )
+                    }
+                    setOnClickListener {
+                        runCatching {
+                            if (intent != null) {
+                                context.startActivity(intent)
+                            } else if (pendingIntent != null) {
+                                if (Utilities.ATLEAST_U) {
+                                    pendingIntent?.send(options.toBundle())
+                                } else {
+                                    pendingIntent?.send()
+                                }
+                            } else if (onClick != null) {
+                                onClick?.run()
+                            }
+                        }
+                    }
+                    layoutParams = LayoutParams(
+                        resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_icon_size),
+                        resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_icon_size)
+                    ).apply {
+                        gravity = Gravity.CENTER_VERTICAL
+                        marginEnd = (4 * resources.displayMetrics.density).toInt()
+                    }
+                    scaleType = ImageView.ScaleType.CENTER_INSIDE
+                }
+
+            }
+
+            is SmartspaceTextButton -> {
+                return DoubleShadowTextView(ctx).apply {
+                    text = this@inflateView.text
+                    setTextAppearance(R.style.EnhancedSmartspaceTextSubtitle)
+                    val options = ActivityOptions.makeBasic()
+                    if (Utilities.ATLEAST_U) {
+                        options.setPendingIntentBackgroundActivityStartMode(
+                            ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED,
+                        )
+                    }
+                    setOnClickListener {
+                        runCatching {
+                            if (intent != null) {
+                                context.startActivity(intent)
+                            } else if (pendingIntent != null) {
+                                if (Utilities.ATLEAST_U) {
+                                    pendingIntent?.send(options.toBundle())
+                                } else {
+                                    pendingIntent?.send()
+                                }
+                            } else if (onClick != null) {
+                                onClick?.run()
+                            }
+                        }
+                    }
                     layoutParams = LayoutParams(
                         LayoutParams.WRAP_CONTENT,
                         LayoutParams.WRAP_CONTENT
