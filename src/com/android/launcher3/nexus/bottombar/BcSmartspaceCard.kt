@@ -196,7 +196,7 @@ class BcSmartspaceCard @JvmOverloads constructor(
 
             is SmartspaceIconButton -> {
                 return ImageView(ctx).apply {
-                    val drawable = BcSmartSpaceUtil.getIconDrawable(icon, context)
+                    val drawable = BcSmartSpaceUtil.getIconButtonDrawable(icon, context)
                         ?.let { DoubleShadowIconDrawable(it, ctx) }
                     updateIconTint(drawable)
                     setImageDrawable(drawable)
@@ -223,8 +223,8 @@ class BcSmartspaceCard @JvmOverloads constructor(
                         }
                     }
                     layoutParams = LayoutParams(
-                        resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_icon_size),
-                        resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_icon_size)
+                        resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_icon_button_size),
+                        resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_icon_button_size)
                     ).apply {
                         gravity = Gravity.CENTER_VERTICAL
                         marginEnd = (4 * resources.displayMetrics.density).toInt()
