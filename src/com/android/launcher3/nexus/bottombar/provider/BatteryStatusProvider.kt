@@ -72,7 +72,7 @@ class BatteryStatusProvider(context: Context) :
             title = title,
             subtitle = subtitle,
             score = score,
-            featureType = SmartspaceTarget.FeatureType.FEATURE_CALENDAR,
+            featureType = SmartspaceTarget.FeatureType.FEATURE_UNDEFINED,
         )
     }
 

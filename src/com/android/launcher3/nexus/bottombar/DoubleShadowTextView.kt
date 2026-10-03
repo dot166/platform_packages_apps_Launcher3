@@ -4,13 +4,13 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatTextView
+import android.widget.TextView
 import com.android.launcher3.views.ShadowInfo.Companion.fromContext
 
 open class DoubleShadowTextView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-) : AppCompatTextView(context, attrs) {
+) : TextView(context, attrs) {
 
     private val shadowInfo = fromContext(context, attrs, 0)
 
