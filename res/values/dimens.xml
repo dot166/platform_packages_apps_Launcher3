@@ -607,7 +607,7 @@
     <dimen name="enhanced_smartspace_margin_start_launcher">10dp</dimen>
     <dimen name="enhanced_smartspace_padding_start">16dp</dimen>
     <dimen name="enhanced_smartspace_padding_end">16dp</dimen>
-    <dimen name="enhanced_smartspace_padding_top">16dp</dimen>
+    <dimen name="enhanced_smartspace_padding_top">0dp</dimen>
     <dimen name="enhanced_smartspace_secondary_card_corner_radius">28dp</dimen>
     <dimen name="enhanced_smartspace_secondary_card_end_margin">1dp</dimen>
     <dimen name="enhanced_smartspace_secondary_card_start_margin">8dp</dimen>
