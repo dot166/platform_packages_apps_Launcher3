@@ -22,6 +22,14 @@ object BcSmartSpaceUtil {
         drawable.setBounds(0, 0, iconSize, iconSize)
         return drawable
     }
+    fun getIconButtonDrawable(icon: Icon?, context: Context): Drawable? {
+        if (icon == null) return null
+        val drawable = icon.loadDrawable(context) ?: return null
+        val iconSize =
+            context.resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_icon_button_size)
+        drawable.setBounds(0, 0, iconSize, iconSize)
+        return drawable
+    }
 
     fun setOnClickListener(
         view: View?,
