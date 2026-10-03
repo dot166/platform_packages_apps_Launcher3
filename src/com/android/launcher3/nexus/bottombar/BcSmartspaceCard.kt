@@ -113,13 +113,7 @@ class BcSmartspaceCard @JvmOverloads constructor(
             null,
             null,
         )
-        titleView.ellipsize = if (target.featureType == SmartspaceTarget.FeatureType.FEATURE_CALENDAR &&
-            Locale.ENGLISH.language == context.resources.configuration.locale.language
-        ) {
-            TextUtils.TruncateAt.MIDDLE
-        } else {
-            TextUtils.TruncateAt.END
-        }
+        titleView.setSelected(true)
         if (hasIcon) {
             setFormattedContentDescription(titleView, title, contentDescription)
         }
@@ -128,14 +122,14 @@ class BcSmartspaceCard @JvmOverloads constructor(
     private fun setSubtitle(subtitle: CharSequence?, charSequence2: CharSequence?) {
         val subtitleView = subtitleTextView ?: return
         subtitleView.text = subtitle
-        subtitleTextView!!.setCompoundDrawablesRelative(
+        subtitleView.setCompoundDrawablesRelative(
             if (subtitle.isNullOrEmpty()) null else iconDrawable,
             null,
             null,
             null,
         )
-        subtitleTextView!!.maxLines = if (target.featureType == SmartspaceTarget.FeatureType.FEATURE_TIPS && !usePageIndicatorUi) 2 else 1
-        setFormattedContentDescription(subtitleTextView!!, subtitle, charSequence2)
+        subtitleView.setSelected(true)
+        setFormattedContentDescription(subtitleView, subtitle, charSequence2)
     }
 
     private fun setFormattedContentDescription(
@@ -196,6 +190,7 @@ class BcSmartspaceCard @JvmOverloads constructor(
                         gravity = Gravity.CENTER_VERTICAL
                         marginEnd = (4 * resources.displayMetrics.density).toInt()
                     }
+                    setSelected(true)
                 }
             }
 
