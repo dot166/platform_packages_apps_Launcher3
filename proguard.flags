@@ -74,3 +74,8 @@
     <fields>;
     <init>(...);
 }
+
+-keep class io.github.dot166.jlib.app.JLibPreferenceModelImpl { *; }
+-keep class io.github.dot166.jlib.app.JLibPreferenceModelImpl$* { *; }
+-keep class io.github.dot166.jlib.app.JLibPreferenceModel { *; }
+-keep class io.github.dot166.jlib.app.JLibPreferenceModel$* { *; }
