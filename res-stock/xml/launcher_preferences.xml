@@ -7,7 +7,7 @@
         android:persistent="false"
         android:title="@string/notification_dots_title"
         android:widgetLayout="@layout/notification_pref_warning" />
-    <SwitchPreference
+    <SwitchPreferenceCompat
         xmlns:launcher="http://schemas.android.com/apk/res-auto"
         android:defaultValue="@bool/pref_add_icon_to_home_default"
         android:key="pref_add_icon_to_home"
@@ -21,7 +21,7 @@
         android:persistent="true"
         android:summary="@string/app_list_pref_screen_desc"
         android:title="@string/app_list_pref_screen_title" >
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="@bool/apps_list_pref_two_lines_toggle"
             android:key="pref_enable_two_line_toggle"
             android:persistent="true"
@@ -36,7 +36,7 @@
             android:key="pref_developer_options"
             android:persistent="false" />
     </PreferenceScreen>
-    <SwitchPreference
+    <SwitchPreferenceCompat
         xmlns:launcher="http://schemas.android.com/apk/res-auto"
         android:defaultValue="false"
         android:key="pref_fixed_landscape_mode"
@@ -44,4 +44,8 @@
         android:title="@string/landscape_mode_title"
         launcher:logIdOff="2020"
         launcher:logIdOn="2014" />
+
+    <com.android.launcher3.nexus.FeedProviderPreference android:key="feed_provider" android:title="@string/feed_provider"/>
+
+    <com.android.launcher3.nexus.bottombar.preference.BottomBarPreference android:key="enabled_bottom_bar_components" android:title="@string/bottom_bar_title" android:persistent="false"/>
 </PreferenceScreen>

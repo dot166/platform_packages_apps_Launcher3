@@ -76,7 +76,7 @@ class BcSmartspaceView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val height = MeasureSpec.getSize(heightMeasureSpec)
         val smartspaceHeight =
-            context.resources.getDimensionPixelSize(R.dimen.qsb_widget_height)
+            context.resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_height)
         if (height <= 0 || height >= smartspaceHeight) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
             scaleX = 1f

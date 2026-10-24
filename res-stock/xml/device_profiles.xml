@@ -1087,4 +1087,28 @@
             launcher:startAlignTaskbarLandscape="false"
             launcher:transientTaskbarIconSize="57.2" />
     </grid-option>
+
+    <grid-option
+        xmlns:launcher="http://schemas.android.com/apk/res-auto"
+        launcher:name="6_by_6"
+        launcher:numRows="6"
+        launcher:numColumns="6"
+        launcher:numFolderRows="5"
+        launcher:numFolderColumns="5"
+        launcher:numHotseatIcons="6"
+        launcher:dbFile="launcher_6_by_6.db"
+        launcher:defaultLayoutId="@xml/default_workspace_5x5"
+        launcher:deviceCategory="phone|multi_display" >
+
+        <display-option
+            launcher:name="Large Phone"
+            launcher:minWidthDps="406"
+            launcher:minHeightDps="694"
+            launcher:iconImageSize="48"
+            launcher:iconTextSize="13.0"
+            launcher:allAppsBorderSpace="16"
+            launcher:allAppsCellHeight="104"
+            launcher:canBeDefault="true" />
+
+    </grid-option>
 </profiles>
