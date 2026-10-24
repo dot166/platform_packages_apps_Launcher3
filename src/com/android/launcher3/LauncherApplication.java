@@ -26,18 +26,19 @@ import com.android.launcher3.dagger.LauncherBaseAppComponent;
 import com.android.launcher3.dagger.LauncherComponentProvider;
 import com.android.launcher3.util.TraceHelper;
 
-import kotlin.jvm.functions.Function1;
+import io.github.dot166.jlib.app.CoreApplication;
 
 /**
  * Main application class for Launcher
  */
-public class LauncherApplication extends Application implements AppFunctionConfiguration.Provider {
+public class LauncherApplication extends CoreApplication implements AppFunctionConfiguration.Provider {
 
     private volatile LauncherBaseAppComponent mAppComponent;
     @Override
     public void onCreate() {
         super.onCreate();
         LauncherComponentProvider.get(this).getMainProcessInitializer().init(this);
+        KT.initSmartspacePrefStore(this);
     }
 
     public LauncherAppComponent getAppComponent() {

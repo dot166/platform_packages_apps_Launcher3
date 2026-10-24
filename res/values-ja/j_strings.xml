@@ -68,4 +68,7 @@
     <string name="accessibility_smartspace_page">%1$d/%2$d ページ</string>
     <string name="next_alarm_description" msgid="2650244835760747046">"次のアラーム: <xliff:g id="ALARM_TIME">%s</xliff:g>"</string>
     <string name="desc_play_pause">再生またはポーズ</string>
+    <string name="action__cancel">キャンセル</string>
+    <string name="action__default">デフォルト</string>
+    <string name="action__ok">OK</string>
 </resources>

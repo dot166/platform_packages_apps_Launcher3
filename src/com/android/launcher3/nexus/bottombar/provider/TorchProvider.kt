@@ -12,7 +12,6 @@ import androidx.core.content.getSystemService
 import com.android.launcher3.R
 import com.android.launcher3.nexus.bottombar.model.SmartspaceScores
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
-import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferences
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -22,7 +21,7 @@ class TorchProvider(context: Context) :
     SmartspaceDataSource(
         context,
         context.getString(R.string.smartspace_torch),
-        BottomBarPreferences.INSTANCE.get(context).smartspaceTorch,
+        prefs.smartspaceTorch,
     ) {
     private val cameraManager = context.getSystemService<CameraManager>()
 

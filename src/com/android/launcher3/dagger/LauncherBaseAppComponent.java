@@ -53,7 +53,6 @@ import com.android.launcher3.model.repository.HomeScreenRepository;
 import com.android.launcher3.model.repository.StringCacheRepository;
 import com.android.launcher3.nexus.bottombar.lawnchair.HeadlessWidgetsManager;
 import com.android.launcher3.nexus.bottombar.lawnchair.NotificationManager;
-import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferences;
 import com.android.launcher3.nexus.bottombar.provider.SmartspaceProvider;
 import com.android.launcher3.notification.NotificationRepository;
 import com.android.launcher3.organizer.dagger.OrganizerComponent;
@@ -201,7 +200,6 @@ public interface LauncherBaseAppComponent {
     SmartspaceProvider getSmartspaceProvider();
     HeadlessWidgetsManager getHeadlessWidgetsManager();
     NotificationManager getNotificationManager();
-    BottomBarPreferences getBottomBarPreferences();
 
     /** Builder for LauncherBaseAppComponent. */
     interface Builder {

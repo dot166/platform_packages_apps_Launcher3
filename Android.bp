@@ -530,7 +530,8 @@ java_defaults {
     ],
     manifest: "quickstep/AndroidManifest.xml",
     platform_apis: true,
-    plugins: ["dagger2-compiler"],
+    enable_ksp: true,
+    plugins: ["dagger2-compiler", "jetpref-datastore-model-processor"],
     min_sdk_version: "current",
     // TODO(b/319712088): re-enable use_resource_processor
     use_resource_processor: false,

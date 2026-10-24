@@ -9,7 +9,6 @@ import com.android.launcher3.LauncherPrefs
 import com.android.launcher3.R
 import com.android.launcher3.nexus.bottombar.model.SmartspaceScores
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
-import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferences
 import com.android.launcher3.util.OnboardingPrefs
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
@@ -18,7 +17,7 @@ class OnboardingProvider(context: Context) :
     SmartspaceDataSource(
         context,
         context.getString(R.string.smartspace_onboarding),
-        BottomBarPreferences.INSTANCE.get(context).smartspaceOnboarding,
+        prefs.smartspaceOnboarding,
     ) {
 
     companion object {

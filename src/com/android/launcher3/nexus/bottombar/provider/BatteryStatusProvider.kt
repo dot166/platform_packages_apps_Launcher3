@@ -12,7 +12,6 @@ import com.android.launcher3.nexus.bottombar.lawnchair.util.broadcastReceiverFlo
 import com.android.launcher3.nexus.bottombar.lawnchair.util.formatShortElapsedTimeRoundingUpToMinutes
 import com.android.launcher3.nexus.bottombar.model.SmartspaceScores
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
-import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferences
 import kotlin.math.abs
 import kotlinx.coroutines.flow.map
 
@@ -21,7 +20,7 @@ class BatteryStatusProvider(context: Context) :
     SmartspaceDataSource(
         context,
         context.getString(R.string.smartspace_battery_status),
-        BottomBarPreferences.INSTANCE.get(context).smartspaceBatteryStatus,
+        prefs.smartspaceBatteryStatus,
     ) {
     private val batteryManager = context.getSystemService<BatteryManager>()
 
