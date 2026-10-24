@@ -14,7 +14,8 @@ import com.android.launcher3.nexus.bottombar.lawnchair.util.repeatOnAttached
 import com.android.launcher3.nexus.bottombar.lawnchair.util.subscribeBlocking
 import com.android.launcher3.nexus.bottombar.model.SmartspaceCalendar
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTimeFormat
-import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferences
+import com.android.launcher3.nexus.bottombar.preference.SmartspacePrefStore
+import com.android.launcher3.nexus.bottombar.preference.SmartspacePreferenceModel
 import java.util.Locale
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
@@ -33,8 +34,8 @@ class IcuDateTextView @JvmOverloads constructor(
 
     init {
         repeatOnAttached {
-            val prefs = BottomBarPreferences.INSTANCE.get(context)
-            val calendarFlow = prefs.calendar
+            val prefs by SmartspacePrefStore
+            val calendarFlow = prefs.calendar.asFlow()
             val optionsFlow = DateTimeOptions.fromPrefs(prefs)
             combine(calendarFlow, optionsFlow) { calendar, options -> calendar to options }
                 .subscribeBlocking(this) {
@@ -182,10 +183,10 @@ data class DateTimeOptions(
     val timeFormat: SmartspaceTimeFormat,
 ) {
     companion object {
-        fun fromPrefs(prefs: BottomBarPreferences) = combine(
-            prefs.showDate,
-            prefs.showTime,
-            prefs.timeFormat,
+        fun fromPrefs(prefs: SmartspacePreferenceModel) = combine(
+            prefs.showDate.asFlow(),
+            prefs.showTime.asFlow(),
+            prefs.timeFormat.asFlow(),
         ) { showDate, showTime, timeFormat ->
             DateTimeOptions(showDate, showTime, timeFormat)
         }

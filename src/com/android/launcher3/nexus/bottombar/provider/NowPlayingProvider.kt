@@ -12,7 +12,6 @@ import com.android.launcher3.nexus.bottombar.lawnchair.getAppName
 import com.android.launcher3.nexus.bottombar.model.SmartspaceIconButton
 import com.android.launcher3.nexus.bottombar.model.SmartspaceScores
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
-import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferences
 import com.android.launcher3.notification.NotificationListener
 import com.android.launcher3.settings.SettingsActivity
 import com.android.launcher3.util.Executors.MAIN_EXECUTOR
@@ -27,7 +26,7 @@ class NowPlayingProvider(context: Context) :
     SmartspaceDataSource(
         context,
         context.getString(R.string.smartspace_now_playing),
-        BottomBarPreferences.INSTANCE.get(context).smartspaceNowPlaying,
+        prefs.smartspaceNowPlaying,
     ) {
 
     private val defaultIcon = Icon.createWithResource(context, R.drawable.ic_music_note)

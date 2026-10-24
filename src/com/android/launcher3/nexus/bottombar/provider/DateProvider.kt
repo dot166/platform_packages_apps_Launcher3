@@ -15,7 +15,6 @@ import com.android.launcher3.nexus.bottombar.model.SmartspaceIconView
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTextView
 import com.android.launcher3.nexus.bottombar.model.SmartspaceView
-import com.android.launcher3.nexus.bottombar.preference.BottomBarPreferences
 import java.util.Calendar
 import java.util.Locale
 import kotlinx.coroutines.flow.map
@@ -24,7 +23,7 @@ class DateProvider(context: Context) :
     SmartspaceDataSource(
         context,
         context.getString(R.string.smartspace_date_and_time),
-        BottomBarPreferences.INSTANCE.get(context).alwaysTrue,
+        prefs.alwaysTrue,
     ) {
 
     val intentFilter = IntentFilter(NotificationManager.ACTION_INTERRUPTION_FILTER_CHANGED).apply {

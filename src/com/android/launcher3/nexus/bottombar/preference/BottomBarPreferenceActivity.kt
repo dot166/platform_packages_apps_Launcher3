@@ -1,7 +1,7 @@
 package com.android.launcher3.nexus.bottombar.preference
 
 import android.app.Activity
-import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.activity.ComponentActivity
@@ -9,76 +9,94 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.displayCutoutPadding
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.IntState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.compose.rememberNavController
 import com.android.launcher3.R
 import com.android.launcher3.nexus.bottombar.SmartspaceViewContainer
 import com.android.launcher3.nexus.bottombar.model.SmartspaceCalendar
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTimeFormat
 import com.android.launcher3.nexus.bottombar.provider.SmartspaceProvider
-import com.android.settingslib.spa.framework.compose.localNavController
-import com.android.settingslib.spa.framework.theme.SettingsTheme
-import com.android.settingslib.spa.widget.preference.ListPreference
-import com.android.settingslib.spa.widget.preference.ListPreferenceModel
-import com.android.settingslib.spa.widget.preference.ListPreferenceOption
-import com.android.settingslib.spa.widget.preference.SwitchPreference
-import com.android.settingslib.spa.widget.preference.SwitchPreferenceModel
-import com.android.settingslib.spa.widget.scaffold.RegularScaffold
-import com.android.settingslib.spa.widget.ui.Category
+import dev.patrickgold.jetpref.datastore.model.collectAsState
+import dev.patrickgold.jetpref.datastore.ui.ListPreference
+import dev.patrickgold.jetpref.datastore.ui.ProvideDefaultDialogPrefStrings
+import dev.patrickgold.jetpref.datastore.ui.SwitchPreference
+import dev.patrickgold.jetpref.datastore.ui.listPrefEntries
+import io.github.dot166.jlib.compose.JLibAppTheme
+import io.github.dot166.jlib.compose.JLibScreen
+import io.github.dot166.jlib.compose.conditional
+import io.github.dot166.jlib.compose.preference.ScrollableScreenColumn
+import io.github.dot166.jlib.compose.preference.SegmentedListColumn
 
 class BottomBarPreferenceActivity: ComponentActivity() {
 
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SettingsTheme {
-                val navController = rememberNavController()
-                CompositionLocalProvider(navController.localNavController()) {
-                    RegularScaffold(stringResource(R.string.bottom_bar_title)) {
-                        val smartspaceProvider =
-                            SmartspaceProvider.INSTANCE.get(LocalContext.current)
-                        val prefs = BottomBarPreferences.INSTANCE.get(LocalContext.current)
-                        SmartspacePreview()
-                        Column {
-                            Category(
-                                title = stringResource(id = R.string.what_to_show),
-                                modifier = Modifier.padding(top = 8.dp),
-                            ) {
-                                smartspaceProvider.dataSources
-                                    .collectAsState()
-                                    .value
-                                    .asSequence()
-                                    .filter { it.isAvailable }
-                                    .filter { it.enabledPref != prefs.alwaysTrue }
-                                    .forEach {
-                                        key(it.providerName) {
-                                            val en = it.enabledPref.flow.collectAsState().value
-                                            SwitchPreference(
-                                                object : SwitchPreferenceModel {
-                                                    override val title: String = it.providerName
-                                                    override val checked: () -> Boolean =
-                                                        { en }
-                                                    override val onCheckedChange: (newChecked: Boolean) -> Unit =
-                                                        { checked -> it.enabledPref.set(checked) }
-                                                }
-                                            )
-                                        }
-                                    }
+            JLibAppTheme {
+                ProvideDefaultDialogPrefStrings(
+                    confirmLabel = stringResource(R.string.action__ok),
+                    dismissLabel = stringResource(R.string.action__cancel),
+                    neutralLabel = stringResource(R.string.action__default),
+                ) {
+                    Column(
+                        modifier = Modifier
+                            //.statusBarsPadding()
+                            .navigationBarsPadding()
+                            .conditional(LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                                displayCutoutPadding()
                             }
-                            SmartspaceDateAndTimePreferences(prefs)
+                            .imePadding(),
+                    ) {
+                        JLibScreen(
+                            title = stringResource(R.string.bottom_bar_title),
+                        ) { (contentPadding, translucent) ->
+                            ScrollableScreenColumn(contentPadding, translucent) {
+                                val smartspaceProvider =
+                                    SmartspaceProvider.INSTANCE.get(LocalContext.current)
+                                val prefs by SmartspacePrefStore
+                                SmartspacePreview()
+                                SegmentedListColumn(
+                                    title = stringResource(id = R.string.what_to_show),
+                                    modifier = Modifier.padding(top = 8.dp),
+                                ) {
+                                    val sources = smartspaceProvider.dataSources
+                                        .collectAsState().value
+                                    val count = sources.size
+                                    sources.asSequence()
+                                        .filter { it.isAvailable }
+                                        .filter { it.enabledPref != prefs.alwaysTrue }
+                                        .forEachIndexed { index, source ->
+                                            key(source.providerName, index) {
+                                                SwitchPreference(
+                                                    pref = source.enabledPref,
+                                                    shapes = ListItemDefaults.segmentedShapes(
+                                                        index,
+                                                        count
+                                                    ),
+                                                    title = source.providerName,
+                                                )
+                                            }
+                                        }
+                                }
+                                SmartspaceDateAndTimePreferences(prefs)
+                            }
                         }
                     }
                 }
@@ -93,7 +111,7 @@ class BottomBarPreferenceActivity: ComponentActivity() {
         val context = LocalContext.current
         val themedContext = remember(themeRes) { ContextThemeWrapper(context, themeRes) }
 
-        Category(
+        SegmentedListColumn(
             title = stringResource(id = R.string.preview_label),
         ) {
             CompositionLocalProvider(LocalContext provides themedContext) {
@@ -120,112 +138,72 @@ class BottomBarPreferenceActivity: ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     @Composable
-    fun SmartspaceDateAndTimePreferences(prefs: BottomBarPreferences) {
+    fun SmartspaceDateAndTimePreferences(prefs: SmartspacePreferenceModel) {
         val calendarHasMinimumContent =
             !prefs.showDate.collectAsState().value || !prefs.showTime.collectAsState().value
         val calendar = prefs.calendar.collectAsState().value
 
-        Category(
+        SegmentedListColumn(
             title = stringResource(id = R.string.smartspace_date_and_time),
             modifier = Modifier.padding(top = 8.dp),
         ) {
+            val count = 4
             val supportCustomizationFormat = calendar.formatCustomizationSupport
             if (supportCustomizationFormat) {
-                val en = prefs.showDate.collectAsState().value
                 SwitchPreference(
-                    object : SwitchPreferenceModel {
-                        override val title: String = stringResource(id = R.string.smartspace_date)
-                        override val checked: () -> Boolean?
-                            get() = { en }
-                        override val onCheckedChange: ((newChecked: Boolean) -> Unit)
-                            get() = { prefs.setShowDate(it) }
-                        override val changeable: () -> Boolean
-                            get() = { if (en) !calendarHasMinimumContent else true }
-                    }
+                    pref = prefs.showDate,
+                    shapes = ListItemDefaults.segmentedShapes(
+                        0,
+                        count
+                    ),
+                    title = stringResource(id = R.string.smartspace_date),
+                    enabledIf = { if (prefs.showDate.collectAsState().value) !calendarHasMinimumContent else true }
                 )
             }
             if (supportCustomizationFormat && prefs.showDate.collectAsState().value) {
-                SmartspaceCalendarPreference(LocalContext.current, prefs)
+                ListPreference(
+                    prefs.calendar,
+                    title = stringResource(id = R.string.smartspace_calendar),
+                    entries = listPrefEntries {
+                        for (value in SmartspaceCalendar.values()) {
+                            entry(value, stringResource(value.nameResourceId))
+                        }
+                    },
+                    shapes = ListItemDefaults.segmentedShapes(
+                        1,
+                        count
+                    ),
+                )
             }
             if (supportCustomizationFormat) {
-                val en = prefs.showTime.collectAsState().value
                 SwitchPreference(
-                    object : SwitchPreferenceModel {
-                        override val title: String = stringResource(id = R.string.smartspace_time)
-                        override val checked: () -> Boolean?
-                            get() = { en }
-                        override val onCheckedChange: ((newChecked: Boolean) -> Unit)
-                            get() = { prefs.setShowTime(it) }
-                        override val changeable: () -> Boolean
-                            get() = { if (en) !calendarHasMinimumContent else true }
-                    }
+                    pref = prefs.showTime,
+                    shapes = ListItemDefaults.segmentedShapes(
+                        2,
+                        count
+                    ),
+                    title = stringResource(id = R.string.smartspace_time),
+                    enabledIf = { if (prefs.showTime.collectAsState().value) !calendarHasMinimumContent else true }
                 )
             }
             if (supportCustomizationFormat && prefs.showTime.collectAsState().value) {
-                SmartspaceTimeFormatPreference(LocalContext.current, prefs)
+                ListPreference(
+                    prefs.timeFormat,
+                    title = stringResource(id = R.string.smartspace_time_format),
+                    entries = listPrefEntries {
+                        for (value in SmartspaceTimeFormat.values()) {
+                            entry(value, stringResource(value.nameResourceId))
+                        }
+                    },
+                    shapes = ListItemDefaults.segmentedShapes(
+                        3,
+                        count
+                    ),
+                )
             }
         }
-    }
-
-    @Composable
-    fun SmartspaceTimeFormatPreference(
-        ctx: Context,
-        prefs: BottomBarPreferences,
-    ) {
-        val entries = remember {
-            SmartspaceTimeFormat.values().mapIndexed { index, format ->
-                ListPreferenceOption(index, ctx.getString(format.nameResourceId))
-            }
-        }
-
-        ListPreference(
-            object : ListPreferenceModel {
-                override val title: String = stringResource(id = R.string.smartspace_time_format)
-                override val options: List<ListPreferenceOption>
-                    get() = entries
-                override val selectedId: IntState
-                    get() = mutableIntStateOf(
-                        SmartspaceTimeFormat.values().indexOf(
-                            prefs.timeFormat.value
-                        )
-                    )
-                override val onIdSelected: (id: Int) -> Unit
-                    get() = {
-                        prefs.setTimeFormat(SmartspaceTimeFormat.values()[it])
-                    }
-            }
-        )
-    }
-
-    @Composable
-    fun SmartspaceCalendarPreference(
-        ctx: Context,
-        prefs: BottomBarPreferences,
-    ) {
-        val entries = remember {
-            SmartspaceCalendar.values().mapIndexed { index, calendar ->
-                ListPreferenceOption(index, ctx.getString(calendar.nameResourceId))
-            }
-        }
-
-        ListPreference(
-            object : ListPreferenceModel {
-                override val title: String = stringResource(id = R.string.smartspace_calendar)
-                override val options: List<ListPreferenceOption>
-                    get() = entries
-                override val selectedId: IntState
-                    get() = mutableIntStateOf(
-                        SmartspaceCalendar.values().indexOf(
-                            prefs.calendar.value
-                        )
-                    )
-                override val onIdSelected: (id: Int) -> Unit
-                    get() = {
-                        prefs.setCalendar(SmartspaceCalendar.values()[it])
-                    }
-            }
-        )
     }
 
 }

@@ -79,3 +79,8 @@
 -keep class io.github.dot166.jlib.app.JLibPreferenceModelImpl$* { *; }
 -keep class io.github.dot166.jlib.app.JLibPreferenceModel { *; }
 -keep class io.github.dot166.jlib.app.JLibPreferenceModel$* { *; }
+
+-keep class com.android.launcher3.nexus.bottombar.preference.SmartspacePreferenceModelImpl { *; }
+-keep class com.android.launcher3.nexus.bottombar.preference.SmartspacePreferenceModelImpl$* { *; }
+-keep class com.android.launcher3.nexus.bottombar.preference.SmartspacePreferenceModel { *; }
+-keep class com.android.launcher3.nexus.bottombar.preference.SmartspacePreferenceModel$* { *; }
