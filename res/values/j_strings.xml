@@ -84,4 +84,5 @@
     <string name="action__cancel">Cancel</string>
     <string name="action__default">Default</string>
     <string name="action__ok">OK</string>
+    <string name="reminder_enable_source_toast">Remember to enable Launcher3 in Breezy Weather settings</string>
 </resources>

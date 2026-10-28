@@ -59,6 +59,14 @@ abstract class SmartspacePreferenceModel : PreferenceModel() {
         key = "enable_smartspace_onboarding",
         default = true
     )
+    val smartspaceWeather = boolean(
+        key = "enable_smartspace_weather",
+        default = true
+    )
+    val smartspaceWeatherLocation = string(
+        key = "smartspace_weather_location",
+        default = "CURRENT_POSITION"
+    )
     val alwaysTrue = PreferenceDataLockedToDefault(
         key = "bottomBarHiddenAlwaysTrue",
         default = true,
