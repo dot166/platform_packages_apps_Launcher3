@@ -49,6 +49,7 @@
                      android:featureFlag="android.security.app_lock_apis" />
     <uses-permission android:name="com.android.systemui.permission.LAUNCH_ACCESSIBILITY_SHORTCUT_CHOOSER_DIALOG" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission android:name="org.breezyweather.READ_PROVIDER" />
 
     <permission
         android:name="${applicationId}.permission.GRID_CONTROL"
@@ -228,6 +229,15 @@
 
         <activity android:name="com.android.launcher3.nexus.bottombar.lawnchair.BlankActivity" />
         <activity android:name="com.android.launcher3.nexus.bottombar.preference.BottomBarPreferenceActivity" />
+
+        <receiver
+            android:name="com.android.launcher3.nexus.bottombar.provider.BreezyReceiver"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="org.breezyweather.ACTION_UPDATE_NOTIFIER" />
+            </intent-filter>
+        </receiver>
 
     </application>
 </manifest>

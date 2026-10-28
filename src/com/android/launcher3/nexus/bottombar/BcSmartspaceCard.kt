@@ -57,7 +57,7 @@ class BcSmartspaceCard @JvmOverloads constructor(
 
         var title: CharSequence? = target.title
         var subtitle = target.subtitle
-        val hasTitle = target.featureType == SmartspaceTarget.FeatureType.INTERNAL_FEATURE_DATE_TIME ||
+        val hasTitle = target.featureType == SmartspaceTarget.FeatureType.INTERNAL_FEATURE_WEATHER_DATE_TIME ||
             !title.isNullOrEmpty()
         val hasSubtitle = !subtitle.isNullOrEmpty()
         if (!hasTitle) {
@@ -153,7 +153,7 @@ class BcSmartspaceCard @JvmOverloads constructor(
     private fun updateIconTint(iconDrawable: DoubleShadowIconDrawable?) {
         val icon = iconDrawable ?: return
         when (target.featureType) {
-            SmartspaceTarget.FeatureType.INTERNAL_FEATURE_DATE_TIME -> icon.setTintList(null)
+            SmartspaceTarget.FeatureType.INTERNAL_FEATURE_WEATHER_DATE_TIME -> icon.setTintList(null)
             else -> icon.setTint(iconTintColor)
         }
     }
