@@ -15,8 +15,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.core.view.doOnPreDraw
 import com.android.launcher3.R
-import com.android.settingslib.spa.framework.theme.SettingsTheme
 import com.google.android.gsa.overlay.controllers.OverlayController
+import io.github.dot166.jlib.compose.JLibAppTheme
 
 class DefaultOverlay(
     private val uid: Int,
@@ -49,7 +49,7 @@ class DefaultOverlay(
         window?.decorView?.removeStatusNavBackgroundOnPreDraw()
         container?.addView(ComposeView(this).apply {
             setContent {
-                SettingsTheme {
+                JLibAppTheme {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text(stringResource(R.string.no_activity_has_been_set_n_please_set_one_in_settings))
                     }

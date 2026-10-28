@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.core.os.bundleOf
 import com.android.launcher3.nexus.bottombar.lawnchair.util.unsafeLazy
-import com.android.settingslib.spa.framework.theme.SettingsTheme
+import io.github.dot166.jlib.compose.JLibAppTheme
 import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
 
@@ -45,7 +45,7 @@ class BlankActivity : ComponentActivity() {
             return
         }
         setContent {
-            SettingsTheme {
+            JLibAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = BottomSheetDefaults.ScrimColor,
