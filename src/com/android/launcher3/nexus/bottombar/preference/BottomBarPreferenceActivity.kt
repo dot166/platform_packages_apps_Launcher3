@@ -95,6 +95,21 @@ class BottomBarPreferenceActivity: ComponentActivity() {
                                             }
                                         }
                                 }
+                                SegmentedListColumn(
+                                    title = stringResource(id = R.string.smartspace_target_prefs),
+                                    modifier = Modifier.padding(top = 8.dp),
+                                ) {
+                                    val count = 1
+                                        SwitchPreference(
+                                            pref = prefs.smartspaceCalendarLocation,
+                                            shapes = ListItemDefaults.segmentedShapes(
+                                                0,
+                                                count
+                                            ),
+                                            title = stringResource(id = R.string.smartspace_calendar),
+                                            enabledIf = { prefs.smartspaceCalendar.collectAsState().value }
+                                        )
+                                }
                                 SmartspaceDateAndTimePreferences(prefs)
                             }
                         }

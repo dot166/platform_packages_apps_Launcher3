@@ -47,6 +47,7 @@ class SmartspaceProvider @Inject constructor(
         TorchProvider(context),
         NowPlayingProvider(context),
         OnboardingProvider(context),
+        CalendarProvider(context),
     )
 
     init {

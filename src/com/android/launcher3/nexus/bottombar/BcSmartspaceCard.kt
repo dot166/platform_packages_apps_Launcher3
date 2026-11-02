@@ -15,6 +15,7 @@ import androidx.core.text.layoutDirection
 import com.android.launcher3.R
 import com.android.launcher3.Utilities
 import com.android.launcher3.nexus.bottombar.model.SmartspaceIconButton
+import com.android.launcher3.nexus.bottombar.model.SmartspaceIconTextView
 import com.android.launcher3.nexus.bottombar.model.SmartspaceIconView
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTarget
 import com.android.launcher3.nexus.bottombar.model.SmartspaceTextButton
@@ -57,8 +58,9 @@ class BcSmartspaceCard @JvmOverloads constructor(
 
         var title: CharSequence? = target.title
         var subtitle = target.subtitle
-        val hasTitle = target.featureType == SmartspaceTarget.FeatureType.INTERNAL_FEATURE_WEATHER_DATE_TIME ||
-            !title.isNullOrEmpty()
+        val hasTitle =
+            target.featureType == SmartspaceTarget.FeatureType.INTERNAL_FEATURE_WEATHER_DATE_TIME ||
+                    !title.isNullOrEmpty()
         val hasSubtitle = !subtitle.isNullOrEmpty()
         if (!hasTitle) {
             title = subtitle
@@ -179,10 +181,45 @@ class BcSmartspaceCard @JvmOverloads constructor(
 
             }
 
+            is SmartspaceIconTextView -> {
+                return LinearLayout(ctx).apply {
+                    orientation = HORIZONTAL
+                    addView(ImageView(ctx).apply {
+                        val drawable = BcSmartSpaceUtil.getIconDrawable(icon, context)
+                            ?.let { DoubleShadowIconDrawable(it, ctx) }
+                        updateIconTint(drawable)
+                        setImageDrawable(drawable)
+                        contentDescription = this@inflateView.contentDescription
+                        layoutParams = LayoutParams(
+                            resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_icon_size),
+                            resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_icon_size)
+                        ).apply {
+                            gravity = Gravity.CENTER_VERTICAL
+                            marginEnd = (4 * resources.displayMetrics.density).toInt()
+                        }
+                        scaleType = ImageView.ScaleType.CENTER_INSIDE
+                    })
+                    addView(DoubleShadowTextView(ctx).apply {
+                        text = this@inflateView.text
+                        setTextAppearance(R.style.EnhancedSmartspaceTextSubtitle)
+                        contentDescription = this@inflateView.contentDescription
+                        layoutParams = LayoutParams(
+                            LayoutParams.WRAP_CONTENT,
+                            LayoutParams.WRAP_CONTENT
+                        ).apply {
+                            gravity = Gravity.CENTER_VERTICAL
+                            marginEnd = (4 * resources.displayMetrics.density).toInt()
+                        }
+                        setSelected(true)
+                    })
+                }
+            }
+
             is SmartspaceTextView -> {
                 return DoubleShadowTextView(ctx).apply {
                     text = this@inflateView.text
                     setTextAppearance(R.style.EnhancedSmartspaceTextSubtitle)
+                    contentDescription = this@inflateView.contentDescription
                     layoutParams = LayoutParams(
                         LayoutParams.WRAP_CONTENT,
                         LayoutParams.WRAP_CONTENT

@@ -71,4 +71,6 @@
     <string name="action__cancel">キャンセル</string>
     <string name="action__default">デフォルト</string>
     <string name="action__ok">OK</string>
+    <string name="target_calendar_title_with_time">%2$d分後に%1$s</string>
+    <string name="target_calendar_subtitle_all_day">1日中</string>
 </resources>

@@ -67,6 +67,14 @@ abstract class SmartspacePreferenceModel : PreferenceModel() {
         key = "smartspace_weather_location",
         default = "CURRENT_POSITION"
     )
+    val smartspaceCalendar = boolean(
+        key = "enable_smartspace_calendar",
+        default = true
+    )
+    val smartspaceCalendarLocation = boolean(
+        key = "enable_smartspace_calendar_location",
+        default = true
+    )
     val alwaysTrue = PreferenceDataLockedToDefault(
         key = "bottomBarHiddenAlwaysTrue",
         default = true,

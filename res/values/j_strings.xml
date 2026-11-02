@@ -85,4 +85,12 @@
     <string name="action__default">Default</string>
     <string name="action__ok">OK</string>
     <string name="reminder_enable_source_toast">Remember to enable Launcher3 in Breezy Weather settings</string>
+    <string name="target_calendar_title_default">Untitled Event</string>
+    <string name="target_calendar_title_with_time">%1$s in %2$dm</string>
+    <string name="target_calendar_subtitle_with_yesterday">Yesterday, %1$s – %1$s</string>
+    <string name="target_calendar_subtitle_with_tomorrow">%1$s – Tomorrow, %1$s</string>
+    <string name="target_calendar_subtitle_with_date_for_start">%1$s, %1$s – %1$s</string>
+    <string name="target_calendar_subtitle_with_date_for_end">%1$s – %1$s, %1$s</string>
+    <string name="target_calendar_subtitle_all_day">All Day</string>
+    <string name="smartspace_target_prefs">Target specific preferences</string>
 </resources>
