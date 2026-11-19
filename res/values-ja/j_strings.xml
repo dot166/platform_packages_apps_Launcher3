@@ -73,4 +73,5 @@
     <string name="action__ok">OK</string>
     <string name="target_calendar_title_with_time">%2$d分後に%1$s</string>
     <string name="target_calendar_subtitle_all_day">1日中</string>
+    <string name="target_calendar_settings_show_location_title">場所を表示</string>
 </resources>

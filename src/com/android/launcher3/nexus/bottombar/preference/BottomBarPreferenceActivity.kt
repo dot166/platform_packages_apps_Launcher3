@@ -106,7 +106,7 @@ class BottomBarPreferenceActivity: ComponentActivity() {
                                                 0,
                                                 count
                                             ),
-                                            title = stringResource(id = R.string.smartspace_calendar),
+                                            title = stringResource(id = R.string.target_calendar_settings_show_location_title),
                                             enabledIf = { prefs.smartspaceCalendar.collectAsState().value }
                                         )
                                 }
